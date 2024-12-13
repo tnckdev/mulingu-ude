@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { Correctness } from "@/utils/correctness";
 import { Sentence } from "@/utils/types";
 
-export default function SentenceBuilder({ sentence }: { sentence: Sentence }) {
+const SentenceBuilder = ({ sentence }: { sentence: Sentence }) => {
   const words = splitSentence(sentence.value);
 
   const initShuffled = shuffled(words);
@@ -97,8 +97,10 @@ export default function SentenceBuilder({ sentence }: { sentence: Sentence }) {
       </Card>
     </>
   );
-}
+};
 
 const splitSentence = (sentence: string) => {
   return sentence.split(" ");
 };
+
+export default SentenceBuilder;

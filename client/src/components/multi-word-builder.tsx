@@ -3,13 +3,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import WordBuilder from "@/components/word-builder";
 import { Word } from "@/utils/types";
 
-export default function MultiWordBuilder({
+const MultiWordBuilder = ({
   original,
   translations,
 }: {
   original: Word;
   translations: Word[];
-}) {
+}) => {
   return (
     <>
       <div className="w-full flex flex-col gap-5">
@@ -35,3 +35,5 @@ export default function MultiWordBuilder({
     </>
   );
 }
+
+export default MultiWordBuilder;

@@ -3,13 +3,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sentence } from "@/utils/types";
 import SentenceBuilder from "@/components/sentence-builder";
 
-export default function MultiSentenceBuilder({
+const MultiSentenceBuilder = ({
   original,
   translations,
 }: {
   original: Sentence;
   translations: Sentence[];
-}) {
+}) => {
   return (
     <>
       <div className="w-full flex flex-col gap-5">
@@ -34,4 +34,6 @@ export default function MultiSentenceBuilder({
       </div>
     </>
   );
-}
+};
+
+export default MultiSentenceBuilder;

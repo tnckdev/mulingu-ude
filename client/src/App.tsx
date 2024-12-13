@@ -1,10 +1,12 @@
 import "./App.css";
-import WordBuilder from "./components/word-builder";
-import SentenceBuilder from "./components/sentence-builder";
-import SoloWordBuilder from "./components/solo-word-builder";
-import MultiWordBuilder from "./components/multi-word-builder";
-import SoloSentenceBuilder from "./components/solo-sentence-builder";
-import MultiSentenceBuilder from "./components/multi-sentence-builder";
+import WordBuilder from "@/components/word-builder";
+import SentenceBuilder from "@/components/sentence-builder";
+import SoloWordBuilder from "@/components/solo-word-builder";
+import MultiWordBuilder from "@/components/multi-word-builder";
+import SoloSentenceBuilder from "@/components/solo-sentence-builder";
+import MultiSentenceBuilder from "@/components/multi-sentence-builder";
+//@ts-ignore
+import Foo from "./components/foo";
 
 function App() {
   return (
@@ -85,6 +87,7 @@ function App() {
             ]}
           />
         </div>
+        <Foo />
       </div>
     </>
   );

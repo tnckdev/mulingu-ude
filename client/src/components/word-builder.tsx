@@ -6,7 +6,7 @@ import { Correctness } from "@/utils/correctness";
 import clsx from "clsx";
 import { Word } from "@/utils/types";
 
-export default function WordBuilder({ word }: { word: Word }) {
+const WordBuilder = ({ word }: { word: Word }) => {
   const letters = splitWord(word.value);
 
   const initShuffled = shuffled(letters);
@@ -98,8 +98,10 @@ export default function WordBuilder({ word }: { word: Word }) {
       </Card>
     </>
   );
-}
+};
 
 const splitWord = (word: string) => {
   return word.split("");
 };
+
+export default WordBuilder;
