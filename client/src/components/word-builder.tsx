@@ -55,7 +55,7 @@ const WordBuilder = ({ word }: { word: Word }) => {
 
   return (
     <>
-      <Card>
+      <Card className="w-full">
         <CardContent>
           <div className="flex flex-col gap-5 items-center justify-items-center p-5">
             <div className="flex flex-wrap gap-2 w-full items-center justify-center min-h-10">
