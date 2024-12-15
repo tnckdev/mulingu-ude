@@ -17,7 +17,7 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
               </div>
             </NavLink>
 
-            <nav className=" hidden md:flex gap-4">
+            <nav className="hidden md:flex gap-4">
               <NavbarLink
                 to={"/"}
                 text={"Home"}
@@ -44,7 +44,7 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
         </div>
       </nav>
 
-      <main className="pt-14">{children}</main>
+      <main className="pt-14 w-full">{children}</main>
     </>
   );
 };

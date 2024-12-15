@@ -1,8 +1,9 @@
+import DictionaryTable from "@/components/dictionary-table";
+
 export default function Dictionary() {
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="w-full border"></div>
-      <p>Dictionary</p>
+    <div className="flex flex-col justify-normal w-full">
+      <DictionaryTable />
     </div>
   );
 }
