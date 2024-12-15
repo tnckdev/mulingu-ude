@@ -66,6 +66,8 @@ export default function DictionaryTable() {
   return (
     <div className="flex flex-col w-full items-center justify-center">
       <DataTable
+        filterPlaceholder="Filter words..."
+        filterColumn="word"
         columns={columns}
         data={[
           { article: "der", word: "Mann", iso: "DE", fluency: 2.7 },
@@ -86,7 +88,7 @@ export default function DictionaryTable() {
           { article: "la", word: "manzana", iso: "ES", fluency: 2.1 },
           { article: "la", word: "pomme", iso: "FR", fluency: 2.75 },
 
-          { article: "das", word: "Haus", iso: "DE", fluency: 0.3},
+          { article: "das", word: "Haus", iso: "DE", fluency: 0.3 },
           { article: "the", word: "house", iso: "US", fluency: 4.2 },
           { article: "det", word: "hus", iso: "NO", fluency: 5.0 },
           { article: "la", word: "casa", iso: "ES", fluency: 0.3 },

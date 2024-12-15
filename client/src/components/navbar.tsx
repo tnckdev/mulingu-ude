@@ -34,6 +34,14 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
                 to={"/components"}
                 text={"Components"}
               />
+              <NavbarLink
+                to={"/leaderboard"}
+                text={"Leaderboard"}
+              />
+              <NavbarLink
+                to={"/categories"}
+                text={"Categories"}
+              />
             </nav>
             <div className="flex items-center gap-4">
               <Button variant={"outline"}>Login</Button>

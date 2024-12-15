@@ -19,3 +19,9 @@ export type Noun = {
   iso: string;
   fluency: number;
 };
+
+export type Category = {
+  title: string;
+  description?: string;
+  wordCount?: number;
+};

@@ -8,6 +8,8 @@ import Learn from "@/routes/learn";
 import Dictionary from "@/routes/dictionary";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/navbar";
+import Leaderbord from "./routes/leaderboard";
+import Categories from "./routes/categories";
 
 function App() {
   return (
@@ -37,6 +39,16 @@ function App() {
               <Route
                 path="dictionary"
                 element={<Dictionary />}
+              />
+
+              <Route
+                path="leaderboard"
+                element={<Leaderbord />}
+              />
+
+              <Route
+                path="categories"
+                element={<Categories />}
               />
             </Routes>
           </Navbar>
