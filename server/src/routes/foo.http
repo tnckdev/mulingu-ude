@@ -1,0 +1,28 @@
+POST http://localhost:3000/api/mnoun 
+Content-Type: application/json
+
+{
+  "nouns": [
+    {
+      "language": "en",
+      "singularArticle": "the",
+      "singular": "dog",
+      "pluralArticle": "the",
+      "plural": "dogs"
+    },
+    {
+      "language": "fr",
+      "singularArticle": "le",
+      "singular": "chien",
+      "pluralArticle": "les",
+      "plural": "chiens"
+    },
+    {
+      "language": "de",
+      "singularArticle": "der",
+      "singular": "Hund",
+      "pluralArticle": "die",
+      "plural": "Hunde"
+    }
+  ]
+}

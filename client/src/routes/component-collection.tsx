@@ -6,14 +6,25 @@ import SoloWordBuilder from "@/components/solo-word-builder";
 import WordBuilder from "@/components/word-builder";
 //@ts-ignore
 import Foo from "@/components/foo";
+
 import WordWriter from "@/components/word-writer";
 import MultiWordWriter from "@/components/multi-word-writer";
 import MultiSentenceWriter from "@/components/multi-sentence-writer";
 import CategoryCard from "@/components/category-card";
+import MultiAnswerBuilder from "@/components/learn/multi-answer-builder";
+import LearnArea from "@/components/learn/learn-area";
 
 export default function ComponentCollection() {
   return (
     <div className="w-full flex flex-col gap-52">
+      <div>
+        <p>learn-area.tsx</p>
+        <LearnArea />
+      </div>
+      <div>
+        <p>multi-answer-builder.tsx</p>
+        <MultiAnswerBuilder index={0} />
+      </div>
       <div>
         <p>word-builder.tsx</p>
         <WordBuilder
