@@ -11,11 +11,9 @@ const SimpleAnswerBuilder = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const text = useAppSelector((state) => {
-    console.log(state);
-
-    return selectText(state.learn, { index, iso });
-  });
+  const text = useAppSelector((state) =>
+    selectText(state.learn, { index, iso })
+  );
 
   return (
     <Input

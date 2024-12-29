@@ -1,6 +1,4 @@
 import "@/App.css";
-//@ts-ignore
-import Foo from "@/components/foo";
 import ComponentCollection from "@/routes/component-collection";
 import { BrowserRouter, Route, Routes } from "react-router";
 import Home from "@/routes/home";
@@ -10,46 +8,31 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/navbar";
 import Leaderbord from "./routes/leaderboard";
 import Categories from "./routes/categories";
+import SignIn from "./routes/sign-in";
+import SignOut from "./routes/sign-out";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <ThemeProvider
-          defaultTheme="dark"
-          storageKey="vite-ui-theme"
-        >
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <Navbar>
             <Routes>
-              <Route
-                index
-                element={<Home />}
-              />
+              <Route index element={<Home />} />
 
-              <Route
-                path="components"
-                element={<ComponentCollection />}
-              />
+              <Route path="components" element={<ComponentCollection />} />
 
-              <Route
-                path="learn"
-                element={<Learn />}
-              />
+              <Route path="learn" element={<Learn />} />
 
-              <Route
-                path="dictionary"
-                element={<Dictionary />}
-              />
+              <Route path="dictionary" element={<Dictionary />} />
 
-              <Route
-                path="leaderboard"
-                element={<Leaderbord />}
-              />
+              <Route path="leaderboard" element={<Leaderbord />} />
 
-              <Route
-                path="categories"
-                element={<Categories />}
-              />
+              <Route path="categories" element={<Categories />} />
+
+              <Route path="signin" element={<SignIn />} />
+
+              <Route path="signout" element={<SignOut />} />
             </Routes>
           </Navbar>
         </ThemeProvider>

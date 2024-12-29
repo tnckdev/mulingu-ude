@@ -2,7 +2,7 @@ import ComplexAnswerBuilder from "./complex-answer-builder";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import SimpleAnswerBuilder from "./simple-answer-builder";
-import { useAppSelector } from "@/utils/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/utils/redux/hooks";
 import {
   Difficulty,
   selectDifficulty,
@@ -10,6 +10,8 @@ import {
 } from "@/utils/redux/learnSlice";
 
 const AnswerBuilder = ({ index, iso }: { index: number; iso: string }) => {
+  const dispatch = useAppDispatch();
+
   const difficulty = useAppSelector((state) =>
     selectDifficulty(state.learn, { index, iso })
   );
@@ -27,7 +29,9 @@ const AnswerBuilder = ({ index, iso }: { index: number; iso: string }) => {
         {difficulty === Difficulty.HARD && (
           <Button
             onClick={() =>
-              updateDifficulty({ index, iso, difficulty: Difficulty.EASY })
+              dispatch(
+                updateDifficulty({ index, iso, difficulty: Difficulty.EASY })
+              )
             }
           >
             Easier

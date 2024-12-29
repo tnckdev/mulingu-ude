@@ -93,8 +93,6 @@ const getSampleAnswers = (): TaskAnswer[] => {
     },
   ];
 
-  console.log(data);
-
   return data;
 };
 
@@ -124,15 +122,17 @@ export const learnSlice = createAppSlice({
       state,
       action: PayloadAction<{ index: number; iso: string; text: string }>
     ) => {
-      const answer = state.answers[action.payload.index];
-      const languageAnswer = answer.languages[action.payload.iso];
-      languageAnswer.text = action.payload.text;
+      const {index, iso, text} = action.payload;
+      const answer = state.answers[index];
+      const languageAnswer = answer.languages[iso];
+      languageAnswer.text = text;
     },
     updateCurrentISO: (
       state,
       action: PayloadAction<{ index: number; iso: string }>
     ) => {
-      state.currentISOs[action.payload.index] = action.payload.iso;
+      const {index, iso} = action.payload;
+      state.currentISOs[index] = iso;
     },
     updateAvailableStrings: (
       state,
@@ -142,9 +142,8 @@ export const learnSlice = createAppSlice({
         availableStrings: string[];
       }>
     ) => {
-      state.answers[action.payload.index].languages[
-        action.payload.iso
-      ].availableStrings = action.payload.availableStrings;
+      const { index, iso, availableStrings } = action.payload;
+      state.answers[index].languages[iso].availableStrings = availableStrings;
     },
     addSelectedString: (
       state,

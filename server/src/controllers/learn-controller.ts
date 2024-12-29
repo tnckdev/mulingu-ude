@@ -1,5 +1,43 @@
 import { NextFunction, Request, Response } from "express";
-import { prisma } from "..";
+import { prisma } from "../prisma";
+
+const getMultiNouns = async (req: Request, res: Response) => {
+  const { amount, categories } = req.body;
+  try {
+    if (!amount || typeof amount !== "number") {
+      return res.status(400).json({ error: "Amount must be a number." });
+    }
+    if (amount < 1) {
+      return res.status(400).json({ error: "Amount must be greater than 0." });
+    }
+    if (categories) {
+      if (!Array.isArray(categories) || categories.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "Categories are required in a non empty array." });
+      }
+      const multiNouns = await prisma.multiNoun.findMany({
+        take: amount,
+        where: {
+          categoryId: {
+            in: categories,
+          },
+        },
+        include: { nouns: true },
+      });
+      res.json(multiNouns);
+    } else {
+      const multiNouns = await prisma.multiNoun.findMany({
+        take: amount,
+        include: { nouns: true },
+      });
+      res.json(multiNouns);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};
 
 const getMultiNoun = async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -9,8 +47,6 @@ const getMultiNoun = async (req: Request, res: Response) => {
 
 const createMultiNoun = async (req: Request, res: Response) => {
   try {
-    console.log(req);
-    
     const { nouns, categoryId } = req.body;
 
     if (!nouns || !Array.isArray(nouns) || nouns.length === 0) {
@@ -46,4 +82,4 @@ const createMultiNoun = async (req: Request, res: Response) => {
   }
 };
 
-export { getMultiNoun, createMultiNoun };
+export { getMultiNoun, createMultiNoun, getMultiNouns };

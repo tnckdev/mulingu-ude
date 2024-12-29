@@ -25,6 +25,7 @@ const MultiAnswerBuilder = ({ index }: { index: number }) => {
       <div className="w-full flex border rounded-xl p-2">
         {ISOs.map((iso) => (
           <Button
+            key={`selector-${index}-${iso}`}
             onClick={() => {
               dispatch(updateCurrentISO({ index, iso }));
             }}
