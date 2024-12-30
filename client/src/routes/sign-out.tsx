@@ -49,6 +49,11 @@ const SignOut = () => {
               method="POST"
             >
               <input type="hidden" name="csrfToken" value={csrfToken ?? ""} />
+              <input
+                type="hidden"
+                name="callbackUrl"
+                value={`${import.meta.env.VITE_APP_URL}/`}
+              />
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button>Sign out</Button>

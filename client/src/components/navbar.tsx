@@ -1,40 +1,11 @@
 import { Earth } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import NavbarLink from "@/components/navbar-link";
-import { NavLink } from "react-router";
+import { NavLink, Outlet } from "react-router";
 
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Session } from "@/utils/auth";
-import { Avatar, AvatarImage } from "./ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+import UserInfo from "@/components/user-info";
 
-const Navbar = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/auth/session`,
-          { withCredentials: true }
-        );
-        setSession(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchSession();
-  }, []);
-
+const Navbar = () => {
   return (
     <>
       <nav className="fixed inset-x-0 top-0 z-50 bg-background shadow-sm dark:bg-background/90 border w-full">
@@ -57,41 +28,13 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
             </nav>
 
             <div className="flex items-center gap-4">
-              {session ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <div className="flex items-center gap-4">
-                      <p>{session.user.name}</p>
-                      <Avatar>
-                        <AvatarImage src={session.user.image} />
-                      </Avatar>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
-                      <DropdownMenuItem>Settings</DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <NavLink to={"/signout"}>Sign out</NavLink>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <NavLink to={"/signin"}>
-                  <Button>Sign in</Button>
-                </NavLink>
-              )}
+              <UserInfo />
               <ModeToggle />
             </div>
           </div>
         </div>
       </nav>
-
-      <main className="pt-14 w-full">{children}</main>
+      <Outlet />
     </>
   );
 };

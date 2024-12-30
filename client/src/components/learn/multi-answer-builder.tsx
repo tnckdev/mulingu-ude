@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/utils/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import {
   selectAnswer,
   selectCurrentISO,
@@ -6,7 +6,7 @@ import {
   updateCurrentISO,
 } from "@/utils/redux/learnSlice";
 import AnswerBuilder from "./answer-builder";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import getFlagEmoji from "@/utils/flags";
 import clsx from "clsx";
 

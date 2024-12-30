@@ -1,23 +1,27 @@
 import "@/App.css";
+import Navbar from "@/components/navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 import ComponentCollection from "@/routes/component-collection";
-import { BrowserRouter, Route, Routes } from "react-router";
+import Dictionary from "@/routes/dictionary";
 import Home from "@/routes/home";
 import Learn from "@/routes/learn";
-import Dictionary from "@/routes/dictionary";
-import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/navbar";
-import Leaderbord from "./routes/leaderboard";
+import { BrowserRouter, Route, Routes } from "react-router";
+import { Toaster } from "./components/ui/toaster";
+import AuthError from "./routes/auth-error";
 import Categories from "./routes/categories";
+import Leaderbord from "./routes/leaderboard";
+import Settings from "./routes/settings";
 import SignIn from "./routes/sign-in";
 import SignOut from "./routes/sign-out";
+import Welcome from "./routes/welcome";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <Navbar>
-            <Routes>
+          <Routes>
+            <Route element={<Navbar />}>
               <Route index element={<Home />} />
 
               <Route path="components" element={<ComponentCollection />} />
@@ -30,11 +34,16 @@ function App() {
 
               <Route path="categories" element={<Categories />} />
 
-              <Route path="signin" element={<SignIn />} />
+              <Route path="welcome" element={<Welcome />} />
 
-              <Route path="signout" element={<SignOut />} />
-            </Routes>
-          </Navbar>
+              <Route path="settings" element={<Settings />} />
+            </Route>
+
+            <Route path="signin" element={<SignIn />} />
+            <Route path="signout" element={<SignOut />} />
+            <Route path="auth-error" element={<AuthError />} />
+          </Routes>
+          <Toaster />
         </ThemeProvider>
       </BrowserRouter>
     </>

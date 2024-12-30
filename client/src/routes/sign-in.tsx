@@ -50,6 +50,11 @@ const SignIn = () => {
               key={`provider-${provider.id}`}
             >
               <input type="hidden" name="csrfToken" value={csrfToken ?? ""} />
+              <input
+                type="hidden"
+                name="callbackUrl"
+                value={`${import.meta.env.VITE_APP_URL}/welcome`}
+              />
               <Button type="submit" variant={"secondary"}>
                 <div className="flex items-center justify-center gap-2">
                   Sign in with {provider.name}{" "}

@@ -1,4 +1,4 @@
-export default function shuffle(array: unknown[]) {
+export default function shuffle<T>(array: T[]) {
   let currentIndex = array.length;
 
   // While there remain elements to shuffle...
@@ -15,7 +15,7 @@ export default function shuffle(array: unknown[]) {
   }
 }
 
-export function shuffled(array: unknown[]) {
+export function shuffled<T>(array: T[]) {
   const copy = array.slice();
   shuffle(copy);
   return copy;

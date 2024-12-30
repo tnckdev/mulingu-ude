@@ -16,17 +16,6 @@ type CSRFResponse = {
   csrfToken: string;
 };
 
-type User = {
-  name: string;
-  email: string;
-  image: string;
-};
-
-type Session = {
-  user: User;
-  expires: string;
-};
-
 const fetchProviders = async () => {
   try {
     const res = await axios.get(
@@ -62,4 +51,4 @@ const fetchSession = async () => {
 };
 
 export { fetchProviders, fetchCSRFToken, fetchSession };
-export type { Provider, ProvidersResponse, CSRFResponse, User, Session };
+export type { Provider, ProvidersResponse, CSRFResponse };

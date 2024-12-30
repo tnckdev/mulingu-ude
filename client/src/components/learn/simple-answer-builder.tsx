@@ -1,6 +1,6 @@
-import { useAppDispatch, useAppSelector } from "@/utils/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { selectText, updateAnswer } from "@/utils/redux/learnSlice";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 
 const SimpleAnswerBuilder = ({
   index,

@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/utils/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import {
   next,
   prev,
@@ -7,7 +7,7 @@ import {
   updateCurrentIndex,
 } from "@/utils/redux/learnSlice";
 import MultiAnswerBuilder from "./multi-answer-builder";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 

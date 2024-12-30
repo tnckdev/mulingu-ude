@@ -1,5 +1,5 @@
 import { createSelector, PayloadAction } from "@reduxjs/toolkit";
-import { createAppSlice } from "./createAppSlice";
+import { createAppSlice } from "@/utils/redux/createAppSlice";
 
 export enum Difficulty {
   EASY,
@@ -122,7 +122,7 @@ export const learnSlice = createAppSlice({
       state,
       action: PayloadAction<{ index: number; iso: string; text: string }>
     ) => {
-      const {index, iso, text} = action.payload;
+      const { index, iso, text } = action.payload;
       const answer = state.answers[index];
       const languageAnswer = answer.languages[iso];
       languageAnswer.text = text;
@@ -131,7 +131,7 @@ export const learnSlice = createAppSlice({
       state,
       action: PayloadAction<{ index: number; iso: string }>
     ) => {
-      const {index, iso} = action.payload;
+      const { index, iso } = action.payload;
       state.currentISOs[index] = iso;
     },
     updateAvailableStrings: (

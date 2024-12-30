@@ -1,8 +1,8 @@
 import ComplexAnswerBuilder from "./complex-answer-builder";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter } from "../ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import SimpleAnswerBuilder from "./simple-answer-builder";
-import { useAppDispatch, useAppSelector } from "@/utils/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import {
   Difficulty,
   selectDifficulty,
