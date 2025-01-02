@@ -1,9 +1,12 @@
 import LearnArea from "@/components/learn/learn-area";
+import ProtectedRoute from "./protected-route";
 
 export default function Learn() {
   return (
-    <div className="w-full items-center">
-      <LearnArea/>
-    </div>
+    <ProtectedRoute>
+      <div className="w-full items-center">
+        <LearnArea />
+      </div>
+    </ProtectedRoute>
   );
 }

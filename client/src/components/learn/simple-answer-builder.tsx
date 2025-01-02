@@ -1,6 +1,6 @@
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { selectText, updateAnswer } from "@/utils/redux/learnSlice";
 import { Input } from "@/components/ui/input";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { selectText, updateTaskAnswerText } from "@/utils/redux/learnSlice";
 
 const SimpleAnswerBuilder = ({
   index,
@@ -20,7 +20,7 @@ const SimpleAnswerBuilder = ({
       placeholder="Your answer is..."
       value={text}
       onChange={(event) =>
-        dispatch(updateAnswer({ index, iso, text: event.target.value }))
+        dispatch(updateTaskAnswerText({ index, iso, text: event.target.value }))
       }
     />
   );

@@ -21,10 +21,10 @@ const Navbar = () => {
             <nav className="hidden md:flex gap-4">
               <NavbarLink to={"/"} text={"Home"} />
               <NavbarLink to={"/learn"} text={"Learn"} />
-              <NavbarLink to={"/dictionary"} text={"Dictionary"} />
+              {/* <NavbarLink to={"/dictionary"} text={"Dictionary"} />
               <NavbarLink to={"/components"} text={"Components"} />
               <NavbarLink to={"/leaderboard"} text={"Leaderboard"} />
-              <NavbarLink to={"/categories"} text={"Categories"} />
+              <NavbarLink to={"/categories"} text={"Categories"} /> */}
             </nav>
 
             <div className="flex items-center gap-4">

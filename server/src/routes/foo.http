@@ -1,3 +1,5 @@
+GET http://localhost:3000/api/learn/random?nouns=3&sentences=3&verbs=3
+
 # POST http://localhost:3000/api/mnoun 
 # Content-Type: application/json
 
@@ -47,4 +49,4 @@
 #   "csrfToken": "e3c69de565d11a698405a6697d6f2487b5db917f1376df45d594b7abf0b934b8"
 # }
 
-GET http://localhost:3000/api/auth/providers
+#GET http://localhost:3000/api/auth/providers

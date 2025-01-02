@@ -1,5 +1,6 @@
-import { shuffled } from "@/utils/fisher-yates";
+import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { shuffled } from "@/utils/fisher-yates";
 import {
   addSelectedString,
   removeSelectedString,
@@ -9,7 +10,6 @@ import {
   selectSolution,
   updateAvailableStrings,
 } from "@/utils/redux/learnSlice";
-import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 
 const ComplexAnswerBuilder = ({

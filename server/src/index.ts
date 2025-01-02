@@ -11,6 +11,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import { authenticatedUser } from "./lib";
 import { userRouter } from "./routes/user-routes";
+import { verbRouter } from "./routes/verb-routes";
+import { sentenceRouter } from "./routes/sentence-routes";
+import { mongoClient } from "./mongo";
+import { nounRouter } from "./routes/noun-routes";
 
 dotenv.config();
 
@@ -52,8 +56,14 @@ app.use("/api/learn", learnRouter);
 
 app.use("/api/user", authenticatedUser, userRouter);
 
+app.use("/api/verb", verbRouter);
+
+app.use("/api/sentence", sentenceRouter);
+
+app.use("/api/noun", nounRouter);
+
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
 
-export { prisma };
+export { prisma, mongoClient };

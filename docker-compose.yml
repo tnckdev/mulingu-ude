@@ -1,0 +1,26 @@
+services:
+  client:
+    build:
+      dockerfile: Dockerfile
+      context: ./client/
+    container_name: mulingu_client
+    volumes:
+      - ./client:/client
+      - node_modules:/client/node_modules
+    ports:
+      - "5173:5173"
+    command: "npm run dev"
+
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: ./server/
+    container_name: mulingu_server
+    volumes:
+      - ./server:/server
+    ports:
+      - "3000:3000"
+    command: "npm run dev"
+
+volumes:
+  node_modules:

@@ -1,12 +1,12 @@
-import { createSelector, PayloadAction } from "@reduxjs/toolkit";
 import { createAppSlice } from "@/utils/redux/createAppSlice";
+import { createSelector, PayloadAction } from "@reduxjs/toolkit";
 
 export enum Difficulty {
   EASY,
   HARD,
 }
 
-type LanguageAnswer = {
+type Answer = {
   text: string;
   solution: string;
   selectedStrings: string[];
@@ -15,91 +15,42 @@ type LanguageAnswer = {
   correct: boolean;
 };
 
-type TaskAnswer = {
+type Reference = {
+  iso: string;
+  text: string;
+};
+
+export type Task = {
   kind: "word" | "sentence";
-  languages: { [iso: string]: LanguageAnswer };
+  reference: Reference;
+  answers: { [iso: string]: Answer };
+  currentISO: string;
 };
 
 export interface LearnSliceState {
-  answers: TaskAnswer[];
+  tasks: Task[];
   currentIndex: number;
-  currentISOs: string[];
 }
 
-const getSampleAnswers = (): TaskAnswer[] => {
-  const data: TaskAnswer[] = [
+const initialState: LearnSliceState = {
+  tasks: [
     {
       kind: "word",
-      languages: {
-        us: {
-          text: "",
-          solution: "Hello",
-          correct: false,
-          availableStrings: [],
-          selectedStrings: [],
-          difficulty: Difficulty.EASY,
-        },
+      reference: { iso: "us", text: "Hello" },
+      answers: {
         de: {
           text: "",
           solution: "Hallo",
-          correct: false,
-          availableStrings: [],
           selectedStrings: [],
-          difficulty: Difficulty.EASY,
+          availableStrings: [],
+          difficulty: Difficulty.HARD,
+          correct: false,
         },
       },
+      currentISO: "de",
     },
-    {
-      kind: "sentence",
-      languages: {
-        us: {
-          text: "",
-          solution: "Hello World!",
-          correct: false,
-          availableStrings: [],
-          selectedStrings: [],
-          difficulty: Difficulty.HARD,
-        },
-        de: {
-          text: "",
-          solution: "Hallo Welt!",
-          correct: false,
-          availableStrings: [],
-          selectedStrings: [],
-          difficulty: Difficulty.HARD,
-        },
-      },
-    },
-    {
-      kind: "sentence",
-      languages: {
-        us: {
-          text: "",
-          solution: "Hello World!",
-          correct: false,
-          availableStrings: [],
-          selectedStrings: [],
-          difficulty: Difficulty.HARD,
-        },
-        de: {
-          text: "",
-          solution: "Hallo Welt!",
-          correct: false,
-          availableStrings: [],
-          selectedStrings: [],
-          difficulty: Difficulty.HARD,
-        },
-      },
-    },
-  ];
-
-  return data;
-};
-
-const initialState: LearnSliceState = {
-  answers: getSampleAnswers(),
+  ],
   currentIndex: 0,
-  currentISOs: ["us", "us", "us"],
 };
 
 export const learnSlice = createAppSlice({
@@ -109,7 +60,7 @@ export const learnSlice = createAppSlice({
     next: (state) => {
       state.currentIndex = Math.min(
         state.currentIndex + 1,
-        state.answers.length - 1
+        state.tasks.length - 1
       );
     },
     prev: (state) => {
@@ -118,22 +69,42 @@ export const learnSlice = createAppSlice({
     updateCurrentIndex: (state, action: PayloadAction<number>) => {
       state.currentIndex = action.payload;
     },
-    updateAnswer: (
+    updateReference: (
       state,
-      action: PayloadAction<{ index: number; iso: string; text: string }>
+      action: PayloadAction<{ reference: Reference; index: number }>
     ) => {
-      const { index, iso, text } = action.payload;
-      const answer = state.answers[index];
-      const languageAnswer = answer.languages[iso];
-      languageAnswer.text = text;
+      const { reference, index } = action.payload;
+      state.tasks[index].reference = reference;
     },
-    updateCurrentISO: (
+    updateTask: (
+      state,
+      action: PayloadAction<{ task: Task; index: number }>
+    ) => {
+      const { task, index } = action.payload;
+      state.tasks[index] = task;
+    },
+    updateTaskISO: (
       state,
       action: PayloadAction<{ index: number; iso: string }>
     ) => {
       const { index, iso } = action.payload;
-      state.currentISOs[index] = iso;
+      const task = state.tasks[index];
+      task.currentISO = iso;
     },
+    updateTaskAnswerText: (
+      state,
+      action: PayloadAction<{ index: number; iso: string; text: string }>
+    ) => {
+      const { index, iso, text } = action.payload;
+      const task = state.tasks[index];
+      const answer = task.answers[iso];
+      answer.text = text;
+    },
+
+    updateTasks: (state, action: PayloadAction<Task[]>) => {
+      state.tasks = action.payload;
+    },
+
     updateAvailableStrings: (
       state,
       action: PayloadAction<{
@@ -143,17 +114,20 @@ export const learnSlice = createAppSlice({
       }>
     ) => {
       const { index, iso, availableStrings } = action.payload;
-      state.answers[index].languages[iso].availableStrings = availableStrings;
+      const task = state.tasks[index];
+      const answer = task.answers[iso];
+      answer.availableStrings = availableStrings;
     },
+
     addSelectedString: (
       state,
       action: PayloadAction<{ index: number; iso: string; strIndex: number }>
     ) => {
       const { index, iso, strIndex } = action.payload;
-      const selectedStrings =
-        state.answers[index].languages[iso].selectedStrings;
-      const availableStrings =
-        state.answers[index].languages[iso].availableStrings;
+      const task = state.tasks[index];
+      const answer = task.answers[iso];
+      const selectedStrings = answer.selectedStrings;
+      const availableStrings = answer.availableStrings;
 
       selectedStrings.push(availableStrings[strIndex]);
       availableStrings.splice(strIndex, 1);
@@ -163,14 +137,15 @@ export const learnSlice = createAppSlice({
       action: PayloadAction<{ index: number; iso: string; strIndex: number }>
     ) => {
       const { index, iso, strIndex } = action.payload;
-      const selectedStrings =
-        state.answers[index].languages[iso].selectedStrings;
-      const availableStrings =
-        state.answers[index].languages[iso].availableStrings;
+      const task = state.tasks[index];
+      const answer = task.answers[iso];
+      const selectedStrings = answer.selectedStrings;
+      const availableStrings = answer.availableStrings;
 
       availableStrings.push(selectedStrings[strIndex]);
       selectedStrings.splice(strIndex, 1);
     },
+
     updateDifficulty: (
       state,
       action: PayloadAction<{
@@ -180,63 +155,75 @@ export const learnSlice = createAppSlice({
       }>
     ) => {
       const { index, iso, difficulty } = action.payload;
-      state.answers[index].languages[iso].difficulty = difficulty;
+      const task = state.tasks[index];
+      const answer = task.answers[iso];
+      answer.difficulty = difficulty;
     },
   },
   selectors: {
-    selectAnswers: (state) => state.answers,
+    selectTasks: (state) => state.tasks,
     selectCurrentIndex: (state) => state.currentIndex,
-    selectCurrentAnswer: (state) => state.answers[state.currentIndex],
-    selectTaskAmount: (state) => state.answers.length,
+    selectCurrentTask: (state) => state.tasks[state.currentIndex],
+    selectTaskAmount: (state) => state.tasks.length,
   },
 });
 
-const selectAnswer = createSelector(
+const selectTask = createSelector(
   [
-    (state: LearnSliceState) => state.answers,
+    (state: LearnSliceState) => state.tasks,
     (_: LearnSliceState, index: number) => index,
   ],
-  (answers, index) => answers[index]
+  (tasks, index) => tasks[index]
 );
 
 const selectSolution = createSelector(
   [
-    (state: LearnSliceState) => state.answers,
+    (state: LearnSliceState) => state.tasks,
     (_: LearnSliceState, info: { index: number; iso: string }) => info,
   ],
-  (answers, info) => answers[info.index].languages[info.iso].solution
+  (tasks, info) => {
+    const { index, iso } = info;
+    const task = tasks[index];
+    const answer = task.answers[iso];
+    return answer.solution;
+  }
 );
 
 const selectText = createSelector(
   [
-    (state: LearnSliceState) => state.answers,
+    (state: LearnSliceState) => state.tasks,
     (_: LearnSliceState, info: { index: number; iso: string }) => info,
   ],
-  (answers, info) => answers[info.index].languages[info.iso].text
+  (tasks, info) => {
+    const { index, iso } = info;
+    const task = tasks[index];
+    const answer = task.answers[iso];
+    return answer.text;
+  }
 );
 
 const selectKind = createSelector(
   [
-    (state: LearnSliceState) => state.answers,
+    (state: LearnSliceState) => state.tasks,
     (_: LearnSliceState, index: number) => index,
   ],
-  (answers, index) => answers[index].kind
+  (tasks, index) => tasks[index].kind
 );
 
-const selectCurrentISO = createSelector(
+const selectTaskISO = createSelector(
   [
-    (state: LearnSliceState) => state.currentISOs,
+    (state: LearnSliceState) => state.tasks,
     (_: LearnSliceState, index: number) => index,
   ],
-  (currentISOs, index) => currentISOs[index]
+  (tasks, index) => tasks[index].currentISO
 );
 
-const selectISOs = createSelector(
+const selectTaskISOs = createSelector(
   [
-    (state: LearnSliceState) => state.answers,
+    (state: LearnSliceState) => state.tasks,
     (_: LearnSliceState, index: number) => index,
   ],
-  (answers, index) => Object.keys(answers[index].languages)
+  (tasks, index) => Object.keys(tasks[index].answers)
 );
 
 const selectAvailableStrings = createSelector(
@@ -244,8 +231,12 @@ const selectAvailableStrings = createSelector(
     (state: LearnSliceState) => state,
     (_: LearnSliceState, info: { index: number; iso: string }) => info,
   ],
-  (state, info) =>
-    state.answers[info.index].languages[info.iso].availableStrings
+  (state, info) => {
+    const { index, iso } = info;
+    const task = state.tasks[index];
+    const answer = task.answers[iso];
+    return answer.availableStrings;
+  }
 );
 
 const selectSelectedStrings = createSelector(
@@ -253,7 +244,12 @@ const selectSelectedStrings = createSelector(
     (state: LearnSliceState) => state,
     (_: LearnSliceState, info: { index: number; iso: string }) => info,
   ],
-  (state, info) => state.answers[info.index].languages[info.iso].selectedStrings
+  (state, info) => {
+    const { index, iso } = info;
+    const task = state.tasks[index];
+    const answer = task.answers[iso];
+    return answer.selectedStrings;
+  }
 );
 
 const selectDifficulty = createSelector(
@@ -261,35 +257,43 @@ const selectDifficulty = createSelector(
     (state: LearnSliceState) => state,
     (_: LearnSliceState, info: { index: number; iso: string }) => info,
   ],
-  (state, info) => state.answers[info.index].languages[info.iso].difficulty
+  (state, info) => {
+    const { index, iso } = info;
+    const task = state.tasks[index];
+    const answer = task.answers[iso];
+    return answer.difficulty;
+  }
 );
 
 export const {
   next,
   prev,
-  updateAnswer,
-  updateCurrentISO,
   updateCurrentIndex,
+  updateReference,
+  updateTask,
+  updateTaskISO,
+  updateTaskAnswerText,
+  updateTasks,
   updateAvailableStrings,
-  updateDifficulty,
   addSelectedString,
   removeSelectedString,
+  updateDifficulty,
 } = learnSlice.actions;
 
 export const {
-  selectAnswers,
+  selectTasks,
   selectCurrentIndex,
-  selectCurrentAnswer,
+  selectCurrentTask,
   selectTaskAmount,
 } = learnSlice.selectors;
 
 export {
+  selectTask,
   selectSolution,
-  selectAnswer,
   selectText,
   selectKind,
-  selectCurrentISO,
-  selectISOs,
+  selectTaskISO,
+  selectTaskISOs,
   selectAvailableStrings,
   selectSelectedStrings,
   selectDifficulty,

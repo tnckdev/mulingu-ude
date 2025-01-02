@@ -1,13 +1,13 @@
-import ComplexAnswerBuilder from "./complex-answer-builder";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import SimpleAnswerBuilder from "./simple-answer-builder";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import {
   Difficulty,
   selectDifficulty,
   updateDifficulty,
 } from "@/utils/redux/learnSlice";
+import ComplexAnswerBuilder from "./complex-answer-builder";
+import SimpleAnswerBuilder from "./simple-answer-builder";
 
 const AnswerBuilder = ({ index, iso }: { index: number; iso: string }) => {
   const dispatch = useAppDispatch();
