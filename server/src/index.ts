@@ -19,7 +19,7 @@ import { nounRouter } from "./routes/noun-routes";
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+// const port = process.env.PORT || 3000;
 
 const corsOptions: CorsOptions = {
   origin: process.env.FRONTEND_URL,
