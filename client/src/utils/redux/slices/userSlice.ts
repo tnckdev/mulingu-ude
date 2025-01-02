@@ -11,7 +11,7 @@ const initialState: UserSliceState = {
   user: null,
   settings: {
     theme: "system",
-    native: null,
+    native: "us",
     languages: [],
   },
 };

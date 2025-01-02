@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { prisma } from "../index";
-import { VerbForm } from "@prisma/client";
 import { z } from "zod";
 import { mongoClient } from "../index";
 
@@ -113,6 +112,17 @@ const createVerbGroup = async (req: Request, res: Response) => {
         .status(400)
         .json({ error: "Verbs are required in a non empty array." });
     }
+
+    type VerbForm = {
+      id: string;
+      numerus: string;
+      persona: string;
+      modus: string;
+      tempus: string;
+      value: string;
+      verbId: string;
+    };
+
 
     const createdVerbGroup = await prisma.verbGroup.create({
       data: {
