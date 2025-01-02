@@ -2,6 +2,7 @@ import UserSettingsForm from "@/components/settings/user-settings";
 import { fetchSession } from "@/utils/auth";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import ProtectedRoute from "./protected-route";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -19,9 +20,11 @@ const Settings = () => {
   });
 
   return (
-    <div className="flex items-center justify-center">
-      <UserSettingsForm />
-    </div>
+    <ProtectedRoute>
+      <div className="flex items-center justify-center">
+        <UserSettingsForm />
+      </div>
+    </ProtectedRoute>
   );
 };
 

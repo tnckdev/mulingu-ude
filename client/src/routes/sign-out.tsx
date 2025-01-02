@@ -10,9 +10,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { fetchCSRFToken, CSRFResponse } from "@/utils/auth";
-import { useState, useEffect, useRef } from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CSRFResponse, fetchCSRFToken } from "@/utils/auth";
+import { useEffect, useRef, useState } from "react";
+import ProtectedRoute from "./protected-route";
 
 const SignOut = () => {
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
@@ -34,50 +35,52 @@ const SignOut = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5">
-      {/* <Earth size={75} /> */}
-      <Card className="w-1/4">
-        <CardHeader>
-          <p className="text-2xl font-semibold">Signout</p>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center justify-center gap-5">
-            <p>Are you sure you want to sign out?</p>
-            <form
-              ref={formRef}
-              action={`${import.meta.env.VITE_API_URL}/auth/signout`}
-              method="POST"
-            >
-              <input type="hidden" name="csrfToken" value={csrfToken ?? ""} />
-              <input
-                type="hidden"
-                name="callbackUrl"
-                value={`${import.meta.env.VITE_APP_URL}/`}
-              />
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button>Sign out</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Sign out?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to sign out?
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleSignOut}>
-                      Sign out
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </form>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <ProtectedRoute>
+      <div className="flex flex-col items-center justify-center gap-5">
+        {/* <Earth size={75} /> */}
+        <Card className="w-1/4">
+          <CardHeader>
+            <p className="text-2xl font-semibold">Signout</p>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col items-center justify-center gap-5">
+              <p>Are you sure you want to sign out?</p>
+              <form
+                ref={formRef}
+                action={`${import.meta.env.VITE_API_URL}/auth/signout`}
+                method="POST"
+              >
+                <input type="hidden" name="csrfToken" value={csrfToken ?? ""} />
+                <input
+                  type="hidden"
+                  name="callbackUrl"
+                  value={`${import.meta.env.VITE_APP_URL}/`}
+                />
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button>Sign out</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Sign out?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to sign out?
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleSignOut}>
+                        Sign out
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </form>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </ProtectedRoute>
   );
 };
 

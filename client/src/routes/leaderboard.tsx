@@ -1,6 +1,7 @@
 import SortingButton from "@/components/sorting-button";
 import { DataTable } from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import ProtectedRoute from "./protected-route";
 
 const Leaderbord = () => {
   type User = { rank: number; name: string; points: number };
@@ -56,15 +57,17 @@ const Leaderbord = () => {
   ];
 
   return (
-    <div className="w-full flex justify-center">
-      <DataTable
-        filterColumn="name"
-        filterPlaceholder="Search name..."
-        columns={columns}
-        data={data}
-        className="w-1/2"
-      />
-    </div>
+    <ProtectedRoute>
+      <div className="w-full flex justify-center">
+        <DataTable
+          filterColumn="name"
+          filterPlaceholder="Search name..."
+          columns={columns}
+          data={data}
+          className="w-1/2"
+        />
+      </div>
+    </ProtectedRoute>
   );
 };
 

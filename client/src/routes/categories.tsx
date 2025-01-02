@@ -1,5 +1,6 @@
 import CategoryCard from "@/components/category-card";
 import { Category } from "@/utils/types";
+import ProtectedRoute from "./protected-route";
 
 const Categories = () => {
   const categories: Category[] = [
@@ -30,11 +31,13 @@ const Categories = () => {
   ];
 
   return (
-    <div className="flex flex-wrap justify-between gap-5">
-      {categories.map((category) => (
-        <CategoryCard category={category} />
-      ))}
-    </div>
+    <ProtectedRoute>
+      <div className="flex flex-wrap justify-between gap-5">
+        {categories.map((category) => (
+          <CategoryCard category={category} />
+        ))}
+      </div>
+    </ProtectedRoute>
   );
 };
 

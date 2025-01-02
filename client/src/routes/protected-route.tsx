@@ -9,6 +9,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!session) {
       navigate("/signin");
+      return;
     }
   }, []);
 
