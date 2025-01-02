@@ -6,7 +6,6 @@ import { selectUser, setUser } from "@/utils/redux/slices/userSlice";
 import { Session, UserSettings } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import ProtectedRoute from "./protected-route";
 
 const Welcome = () => {
   const dispatch = useAppDispatch();
@@ -47,12 +46,10 @@ const Welcome = () => {
   }, []);
 
   return (
-    <ProtectedRoute>
-      <div className="flex flex-col items-center justify-center">
-        <h1>{`Welcome, ${user?.name}`}!</h1>
-        {newUser && <UserSettingsForm />}
-      </div>
-    </ProtectedRoute>
+    <div className="flex flex-col items-center justify-center">
+      <h1>{`Welcome, ${user?.name}`}!</h1>
+      {newUser && <UserSettingsForm />}
+    </div>
   );
 };
 
