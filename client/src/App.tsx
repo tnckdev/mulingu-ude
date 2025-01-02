@@ -1,59 +1,54 @@
 import "@/App.css";
-//@ts-ignore
-import Foo from "@/components/foo";
+import Navbar from "@/components/navbar";
+import { ThemeProvider } from "@/components/theme-provider";
 import ComponentCollection from "@/routes/component-collection";
-import { BrowserRouter, Route, Routes } from "react-router";
+import Dictionary from "@/routes/dictionary";
 import Home from "@/routes/home";
 import Learn from "@/routes/learn";
-import Dictionary from "@/routes/dictionary";
-import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/navbar";
-import Leaderbord from "./routes/leaderboard";
+import { BrowserRouter, Route, Routes } from "react-router";
+import { SessionProvider } from "./components/session-provider";
+import { Toaster } from "./components/ui/toaster";
+import AuthError from "./routes/auth-error";
 import Categories from "./routes/categories";
+import Leaderbord from "./routes/leaderboard";
+import Settings from "./routes/settings";
+import SignIn from "./routes/sign-in";
+import SignOut from "./routes/sign-out";
+import Welcome from "./routes/welcome";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <ThemeProvider
-          defaultTheme="dark"
-          storageKey="vite-ui-theme"
-        >
-          <Navbar>
+      <SessionProvider>
+        <BrowserRouter>
+          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <Routes>
-              <Route
-                index
-                element={<Home />}
-              />
+              <Route element={<Navbar />}>
+                <Route index element={<Home />} />
 
-              <Route
-                path="components"
-                element={<ComponentCollection />}
-              />
+                <Route path="components" element={<ComponentCollection />} />
 
-              <Route
-                path="learn"
-                element={<Learn />}
-              />
+                <Route path="learn" element={<Learn />} />
 
-              <Route
-                path="dictionary"
-                element={<Dictionary />}
-              />
+                <Route path="dictionary" element={<Dictionary />} />
 
-              <Route
-                path="leaderboard"
-                element={<Leaderbord />}
-              />
+                <Route path="leaderboard" element={<Leaderbord />} />
 
-              <Route
-                path="categories"
-                element={<Categories />}
-              />
+                <Route path="categories" element={<Categories />} />
+
+                <Route path="welcome" element={<Welcome />} />
+
+                <Route path="settings" element={<Settings />} />
+              </Route>
+
+              <Route path="signin" element={<SignIn />} />
+              <Route path="signout" element={<SignOut />} />
+              <Route path="auth-error" element={<AuthError />} />
             </Routes>
-          </Navbar>
-        </ThemeProvider>
-      </BrowserRouter>
+            <Toaster />
+          </ThemeProvider>
+        </BrowserRouter>
+      </SessionProvider>
     </>
   );
 }

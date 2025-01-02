@@ -1,10 +1,11 @@
 import { Earth } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import NavbarLink from "@/components/navbar-link";
-import { NavLink } from "react-router";
+import { NavLink, Outlet } from "react-router";
 
-const Navbar = ({ children }: { children: React.ReactNode }) => {
+import UserInfo from "@/components/user-info";
+
+const Navbar = () => {
   return (
     <>
       <nav className="fixed inset-x-0 top-0 z-50 bg-background shadow-sm dark:bg-background/90 border w-full">
@@ -18,41 +19,22 @@ const Navbar = ({ children }: { children: React.ReactNode }) => {
             </NavLink>
 
             <nav className="hidden md:flex gap-4">
-              <NavbarLink
-                to={"/"}
-                text={"Home"}
-              />
-              <NavbarLink
-                to={"/learn"}
-                text={"Learn"}
-              />
-              <NavbarLink
-                to={"/dictionary"}
-                text={"Dictionary"}
-              />
-              <NavbarLink
-                to={"/components"}
-                text={"Components"}
-              />
-              <NavbarLink
-                to={"/leaderboard"}
-                text={"Leaderboard"}
-              />
-              <NavbarLink
-                to={"/categories"}
-                text={"Categories"}
-              />
+              <NavbarLink to={"/"} text={"Home"} />
+              <NavbarLink to={"/learn"} text={"Learn"} />
+              {/* <NavbarLink to={"/dictionary"} text={"Dictionary"} />
+              <NavbarLink to={"/components"} text={"Components"} />
+              <NavbarLink to={"/leaderboard"} text={"Leaderboard"} />
+              <NavbarLink to={"/categories"} text={"Categories"} /> */}
             </nav>
+
             <div className="flex items-center gap-4">
-              <Button variant={"outline"}>Login</Button>
-              <Button>Sign up</Button>
+              <UserInfo />
               <ModeToggle />
             </div>
           </div>
         </div>
       </nav>
-
-      <main className="pt-14 w-full">{children}</main>
+      <Outlet />
     </>
   );
 };
