@@ -15,9 +15,10 @@
   #publish = "build-output/"
 
   # Default build command.
-  command = "echo 'default context'"
+  command = "npm run build"
 
 [functions]
+  directory = "src/netlify/functions"
   external_node_modules = ["express"]
   node_bundler = "esbuild"
 [[redirects]]
