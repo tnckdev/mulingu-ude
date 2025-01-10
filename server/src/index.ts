@@ -61,8 +61,8 @@ app.use("/api/sentence", sentenceRouter);
 
 app.use("/api/noun", nounRouter);
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`[server]: Server is running at http://localhost:${port}`);
+// });
 
 export {app, prisma };
