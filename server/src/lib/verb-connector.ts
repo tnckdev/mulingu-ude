@@ -1,4 +1,4 @@
-import { LanguageISO, Verb, VerbForm } from "@/types";
+import { LanguageISO, Verb, VerbForm } from "../types";
 import { prisma } from "../index";
 import { MongoClient } from "mongodb";
 import { languageFilter } from "../utils/pipelines/language-filter";
