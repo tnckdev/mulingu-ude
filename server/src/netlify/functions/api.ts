@@ -1,23 +1,28 @@
-// YOUR_BASE_DIRECTORY/netlify/functions/api.ts
-
-import { ExpressAuth, ExpressAuthConfig } from "@auth/express";
-import GitHub from "@auth/express/providers/github";
-import express, { Router } from "express";
+import { app } from "../../index";
 import serverless from "serverless-http";
 
-const api = express();
+export const handler = serverless(app);
 
-const router = Router();
-router.get("/hello", (req, res) => {
-  res.send("Hello World!");
-});
+// // YOUR_BASE_DIRECTORY/netlify/functions/api.ts
 
-const authConfig: ExpressAuthConfig = {
-  providers: [GitHub],
-}
+// import { ExpressAuth, ExpressAuthConfig } from "@auth/express";
+// import GitHub from "@auth/express/providers/github";
+// import express, { Router } from "express";
+// import serverless from "serverless-http";
 
-api.use("/api/auth/*", ExpressAuth(authConfig));
+// const api = express();
 
-api.use("/api/", router);
+// const router = Router();
+// router.get("/hello", (req, res) => {
+//   res.send("Hello World!");
+// });
 
-export const handler = serverless(api);
+// const authConfig: ExpressAuthConfig = {
+//   providers: [GitHub],
+// }
+
+// api.use("/api/auth/*", ExpressAuth(authConfig));
+
+// api.use("/api/", router);
+
+// export const handler = serverless(api);
