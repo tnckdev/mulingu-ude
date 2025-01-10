@@ -1,94 +1,54 @@
 import { Request, Response } from "express";
 
-import { prisma } from "../prisma";
-import { getUserSession } from "../lib";
-import { User } from "@prisma/client";
+import {
+  findUser,
+  findUserSettings,
+  updateUserSettings,
+} from "../lib/user-connector";
+import { z } from "zod";
+import { UserSettingsZod } from "../types";
 
-const fetchUser = async (email: string): Promise<User | null> => {
-  return await prisma.user.findUnique({
-    where: { email },
+const getUser = async (req: Request, res: Response) => {
+  const SearchParams = z.object({
+    email: z.string(),
   });
-};
 
-const fetchUserSettings = async (email: string) => {
-  const user = await fetchUser(email);
-  if (!user) {
-    return null;
-  }
+  const { email } = SearchParams.parse(req.query);
 
-  return await prisma.userSettings.findUnique({
-    where: { userId: user.id },
-  });
-};
-
-const readUser = async (req: Request, res: Response) => {
-  const userEmail = req.query.email as string;
-  if (!userEmail) {
-    return res.status(400).json({ error: "Email is required." });
-  }
-  const user = await fetchUser(userEmail);
+  const user = await findUser(email);
   if (!user) {
     return res.status(404).json({ error: "User not found." });
   }
-  res.json(user);
+  return res.status(404).json(user);
 };
 
-const readUserSettings = async (req: Request, res: Response) => {
-  const userEmail = req.query.email as string;
-  if (!userEmail) {
-    return res.status(400).json({ error: "Email is required." });
-  }
-  const user = await fetchUser(userEmail);
-  if (!user) {
-    return res.status(404).json({ error: "User not found." });
-  }
-  const userSettings = await fetchUserSettings(userEmail);
+const getUserSettings = async (req: Request, res: Response) => {
+  const SearchParams = z.object({
+    email: z.string(),
+  });
+
+  const { email } = SearchParams.parse(req.query);
+
+  const userSettings = await findUserSettings(email);
   if (!userSettings) {
     return res.status(404).json({ error: "User settings not found." });
   }
   res.status(200).json(userSettings);
 };
 
-const createUserSettings = async (req: Request, res: Response) => {
-  const userEmail = req.query.email as string;
-  if (!userEmail) {
-    return res.status(400).json({ error: "Email is required." });
-  }
-  const user = await fetchUser(userEmail);
-  if (!user) {
-    return res.status(404).json({ error: "User not found." });
-  }
-  const { theme, native, languages } = req.body;
-  const userSettings = await prisma.userSettings.create({
-    data: {
-      theme,
-      native,
-      languages,
-      userId: user.id,
-    },
+const postUserSettings = async (req: Request, res: Response) => {
+  const Body = z.object({
+    email: z.string(),
+    userSettings: UserSettingsZod,
   });
-  res.status(201).json(userSettings);
+
+  const { email, userSettings } = Body.parse(req.body);
+
+  const updatedUserSettings = await updateUserSettings(email, userSettings);
+
+  return res
+    .status(updatedUserSettings != null ? 200 : 500)
+    .json(updatedUserSettings);
 };
 
-const updateUserSettings = async (req: Request, res: Response) => {
-  const userEmail = req.query.email as string;
-  if (!userEmail) {
-    return res.status(400).json({ error: "Email is required." });
-  }
-  const user = await fetchUser(userEmail);
-  if (!user) {
-    return res.status(404).json({ error: "User not found." });
-  }
-  const { theme, native, languages } = req.body;
-  const userSettings = await prisma.userSettings.update({
-    where: { userId: user.id },
-    data: {
-      theme,
-      native,
-      languages,
-    },
-  });
-  res.status(200).json(userSettings);
-};
-
-export { readUserSettings, readUser, createUserSettings, updateUserSettings };
+export { getUser, getUserSettings, postUserSettings };

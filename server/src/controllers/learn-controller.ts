@@ -1,24 +1,30 @@
 import { NextFunction, Request, Response } from "express";
 import { prisma } from "../prisma";
 import { z } from "zod";
-import { fetchRandomNounGroups } from "./noun-controller";
-import { fetchRandomVerbGroups } from "./verb-controller";
-import { fetchRandomSentenceGroups } from "./sentence-controller";
+import { getUserSession } from "../lib";
+import { LanguageISOZod } from "../types";
+import { findRandomNounGroups } from "../lib/noun-connector";
+import { findRandomVerbGroups } from "../lib/verb-connector";
+import { findRandomSentenceGroups } from "../lib/sentence-connector";
 
 const getRandomTasks = async (req: Request, res: Response) => {
-  const Query = z.object({
-    nouns: z.coerce.number().default(0),
-    verbs: z.coerce.number().default(0),
-    sentences: z.coerce.number().default(0),
+  const SearchParams = z.object({
+    nouns: z.coerce.number().default(1),
+    verbs: z.coerce.number().default(1),
+    sentences: z.coerce.number().default(1),
+    languages: z.array(LanguageISOZod).default(["us", "de"]),
   });
 
   try {
-    const { nouns, verbs, sentences } = Query.parse(req.query);
+    const { nouns, verbs, sentences, languages } = SearchParams.parse(
+      req.query
+    );
 
-    const randomNounGroups = await fetchRandomNounGroups(nouns, true);
-    const randomVerbGroups = await fetchRandomVerbGroups(verbs, true);
-    const randomSentenceGroups = await fetchRandomSentenceGroups(
+    const randomNounGroups = await findRandomNounGroups(nouns, languages, true);
+    const randomVerbGroups = await findRandomVerbGroups(verbs, languages, true);
+    const randomSentenceGroups = await findRandomSentenceGroups(
       sentences,
+      languages,
       true
     );
 
@@ -33,32 +39,87 @@ const getRandomTasks = async (req: Request, res: Response) => {
   }
 };
 
-const getAdaptedTasks = async (req: Request, res: Response) => {
-  const Query = z.object({
-    nouns: z.coerce.number().default(0),
-    verbs: z.coerce.number().default(0),
-    sentences: z.coerce.number().default(0),
+const gradeAnswers = async (req: Request, res: Response) => {
+  const Body = z.object({
+    email: z.string(),
+    answers: z.array(
+      z.object({
+        language: z.string(),
+        answer: z.string(),
+        solution: z.string(),
+      })
+    ),
   });
 
   try {
-    const { nouns, verbs, sentences } = Query.parse(req.query);
+    const { email, answers } = Body.parse(req.body);
 
-    const randomNounGroups = await fetchRandomNounGroups(nouns, true);
-    const randomVerbGroups = await fetchRandomVerbGroups(verbs, true);
-    const randomSentenceGroups = await fetchRandomSentenceGroups(
-      sentences,
-      true
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const session = await getUserSession(req, res);
+    if (session.user.email !== email) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const gradeMap = answers.reduce(
+      (acc: { [key: string]: number }, answer) => {
+        const correct = answer.answer === answer.solution;
+        acc[answer.language] = (acc[answer.language] || 0) + (correct ? 1 : 0);
+        acc["total"] = (acc["total"] || 0) + (correct ? 1 : 0);
+        return acc;
+      },
+      {}
     );
 
-    return res.status(200).json({
-      nounGroups: randomNounGroups,
-      verbGroups: randomVerbGroups,
-      sentenceGroups: randomSentenceGroups,
+    const keys = Object.keys(gradeMap);
+    keys.forEach(async (key) => {
+      await updateRating(user.id, key, gradeMap[key]);
     });
+    return res.status(200).json(gradeMap);
   } catch (error) {
     console.error(error);
     return res.status(400).json({ error: "Something went wrong" });
   }
 };
 
-export { getRandomTasks };
+const updateRating = async (
+  userId: string,
+  language: string,
+  rating: number
+) => {
+  const existingRating = await prisma.ratings.findUnique({
+    where: {
+      userId_language: {
+        userId: userId,
+        language: language,
+      },
+    },
+  });
+
+  const currentRating = existingRating ? existingRating.rating : 0;
+
+  const ratings = await prisma.ratings.upsert({
+    where: {
+      userId_language: {
+        userId: userId,
+        language: language,
+      },
+    },
+    update: { rating: currentRating + rating },
+    create: {
+      userId: userId,
+      language: language,
+      rating: rating,
+    },
+  });
+};
+
+export { getRandomTasks, gradeAnswers };

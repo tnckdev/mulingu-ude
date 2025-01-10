@@ -1,15 +1,16 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
-import { Button } from "./ui/button";
-import { ArrowDown, ArrowUp } from "lucide-react";
 import getFlagEmoji from "@/utils/flags";
 import { Noun } from "@/utils/types";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
-// export type DictionaryEntry = {
-//   word: string;
-//   iso: string;
-//   fluency: number;
-// };
+
+export type DictionaryEntry = {
+  word: string;
+  iso: string;
+  fluency: number;
+};
 
 export const columns: ColumnDef<Noun>[] = [
   { accessorKey: "article", header: "" },

@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { shuffled } from "@/utils/fisher-yates";
 import {
   addSelectedString,
   removeSelectedString,
@@ -9,7 +8,9 @@ import {
   selectSelectedStrings,
   selectSolution,
   updateAvailableStrings,
-} from "@/utils/redux/learnSlice";
+} from "@/lib/redux/slices/learn";
+import { shuffled } from "@/utils/fisher-yates";
+import { LanguageISO } from "@/utils/types";
 import { useEffect } from "react";
 
 const ComplexAnswerBuilder = ({
@@ -17,7 +18,7 @@ const ComplexAnswerBuilder = ({
   iso,
 }: {
   index: number;
-  iso: string;
+  iso: LanguageISO;
 }) => {
   const dispatch = useAppDispatch();
 

@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { authConfig } from ".";
 
 export async function getUserSession(req: Request, res: Response) {
+  
   const session = res.locals.session ?? (await getSession(req, authConfig));
   return session;
 }

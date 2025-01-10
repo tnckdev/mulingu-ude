@@ -1,17 +1,22 @@
+import GitHub from "@/assets/github.svg";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useState, useEffect } from "react";
-import GitHub from "../assets/github.svg";
 import {
-  fetchProviders,
-  fetchCSRFToken,
-  ProvidersResponse,
-  Provider,
   CSRFResponse,
-} from "@/utils/auth";
+  fetchCSRFToken,
+  fetchProviders,
+  Provider,
+  ProvidersResponse,
+} from "@/lib/auth";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 const SignIn = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/welcome";
+
   const [providers, setProviders] = useState<Provider[]>([]);
   useEffect(() => {
     const getProviders = async () => {
@@ -36,8 +41,7 @@ const SignIn = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5">
-      {/* <Earth size={75} /> */}
+    <div className="flex flex-col items-center justify-center gap-5 w-full">
       <Card className="w-1/4">
         <CardHeader>
           <p className="text-2xl font-semibold">Sign In</p>
@@ -53,7 +57,7 @@ const SignIn = () => {
               <input
                 type="hidden"
                 name="callbackUrl"
-                value={`${import.meta.env.VITE_APP_URL}/welcome`}
+                value={`${import.meta.env.VITE_APP_URL}${callbackUrl}`}
               />
               <Button type="submit" variant={"secondary"}>
                 <div className="flex items-center justify-center gap-2">

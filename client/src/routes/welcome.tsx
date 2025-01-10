@@ -1,32 +1,14 @@
 import UserSettingsForm from "@/components/settings/user-settings";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useAppSelector } from "@/hooks/redux";
+import { fetchSession } from "@/lib/auth";
+import { selectUser } from "@/lib/redux/slices/user";
 import { fetchUserSettings } from "@/lib/settings";
-import { fetchSession } from "@/utils/auth";
-import { selectUser, setUser } from "@/utils/redux/slices/userSlice";
 import { Session, UserSettings } from "@/utils/types";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import ProtectedRoute from "./protected-route";
 
 const Welcome = () => {
-  const dispatch = useAppDispatch();
-
-  const navigate = useNavigate();
-
   const user = useAppSelector(selectUser);
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const session: Session = await fetchSession();
-      if (!session) {
-        navigate("/signin");
-        return;
-      }
-
-      dispatch(setUser(session.user));
-    };
-    loadUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [newUser, setNewUser] = useState(false);
   useEffect(() => {
@@ -46,10 +28,12 @@ const Welcome = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h1>{`Welcome, ${user?.name}`}!</h1>
-      {newUser && <UserSettingsForm />}
-    </div>
+    <ProtectedRoute>
+      <div className="flex flex-col items-center justify-center">
+        <h1>{`Welcome, ${user?.name}`}!</h1>
+        {newUser && <UserSettingsForm />}
+      </div>
+    </ProtectedRoute>
   );
 };
 

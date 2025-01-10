@@ -1,8 +1,5 @@
-import getFlagEmoji from "@/utils/flags";
-import { LanguageItem, SettingsFormSchema } from "@/utils/types";
-import { UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-import { FormControl, FormField } from "../ui/form";
+import SettingsItem from "@/components/settings/settings-item";
+import { FormControl, FormField } from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -10,8 +7,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import SettingsItem from "./settings-item";
+} from "@/components/ui/select";
+import getFlagEmoji from "@/utils/flags";
+import { LanguageItem, SettingsFormSchema } from "@/utils/types";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
 
 interface NativeLanguageSettingsProps {
   form: UseFormReturn<z.infer<typeof SettingsFormSchema>>;

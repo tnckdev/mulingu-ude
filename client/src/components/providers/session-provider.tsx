@@ -1,6 +1,7 @@
 import { useAppDispatch } from "@/hooks/redux";
-import { fetchSession } from "@/utils/auth";
-import { setUser } from "@/utils/redux/slices/userSlice";
+import { fetchSession } from "@/lib/auth";
+import { setUser, setUserSettings } from "@/lib/redux/slices/user";
+import { fetchUserSettings } from "@/lib/settings";
 import { Session } from "@/utils/types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -29,6 +30,8 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
         if (session && session.user) {
           setSession(session);
           dispatch(setUser(session.user));
+          const userSettings = await fetchUserSettings(session.user);
+          dispatch(setUserSettings(userSettings));
         }
       } catch (error) {
         console.error("Failed to fetch session", error);
@@ -38,7 +41,7 @@ export const SessionProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     checkSession();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

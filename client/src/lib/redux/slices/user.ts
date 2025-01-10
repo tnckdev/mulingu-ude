@@ -1,5 +1,5 @@
+import { createAppSlice } from "@/lib/redux/createAppSlice";
 import { User, UserSettings } from "@/utils/types";
-import { createAppSlice } from "../createAppSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
 interface UserSliceState {

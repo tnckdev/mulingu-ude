@@ -1,10 +1,15 @@
+import SettingsItem from "@/components/settings/settings-item";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import getFlagEmoji from "@/utils/flags";
 import { LanguageItem, SettingsFormSchema } from "@/utils/types";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { Checkbox } from "../ui/checkbox";
-import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
-import SettingsItem from "./settings-item";
 
 interface LearningLanguagesSettingsProps {
   form: UseFormReturn<z.infer<typeof SettingsFormSchema>>;

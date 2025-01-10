@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-  createNounGroup,
   getNoun,
   getNounGroup,
   getRandomNounGroups,
+  postNounGroup,
 } from "../controllers/noun-controller";
 
 const nounRouter = Router();
@@ -13,7 +13,7 @@ nounRouter.get("/", async (req, res) => {
 });
 
 nounRouter.post("/group", async (req, res) => {
-  await createNounGroup(req, res);
+  await postNounGroup(req, res);
 });
 
 nounRouter.get("/group", async (req, res) => {

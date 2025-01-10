@@ -1,7 +1,4 @@
-import { SettingsFormSchema } from "@/utils/types";
-import { UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-import { FormControl, FormField } from "../ui/form";
+import { FormControl, FormField } from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -10,6 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SettingsFormSchema } from "@/utils/types";
+import { UseFormReturn } from "react-hook-form";
+import { z } from "zod";
 import SettingsItem from "./settings-item";
 
 interface ThemeSettingsProps {

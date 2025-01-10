@@ -9,7 +9,7 @@ const AuthError = () => {
   const error = searchParams.get("error");
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center w-full">
       <Card className="w-1/3">
         <CardHeader className="flex items-center justify-center gap-2 justify-items-center">
           <CircleAlert />

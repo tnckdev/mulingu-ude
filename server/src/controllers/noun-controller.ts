@@ -1,27 +1,23 @@
 import { Request, Response } from "express";
-import { mongoClient, prisma } from "../index";
 import { z } from "zod";
-
-/**
- * Fetches a noun by its ID.
- *
- * @param id
- * @returns
- */
-const fetchNoun = async (id: string) => {
-  return await prisma.noun.findUnique({
-    where: { id },
-  });
-};
+import { LanguageISOZod, NounZod } from "../types";
+import {
+  createNounGroup,
+  findNoun,
+  findNounGroupWithNouns,
+  findRandomNounGroups,
+} from "../lib/noun-connector";
 
 const getNoun = async (req: Request, res: Response) => {
-  const Query = z.object({
+  const SearchParams = z.object({
     id: z.string(),
   });
 
   try {
-    const { id } = Query.parse(req.query);
-    const noun = await fetchNoun(id);
+    const { id } = SearchParams.parse(req.query);
+
+    const noun = await findNoun(id);
+
     return res.status(200).json(noun);
   } catch (error) {
     console.error(error);
@@ -29,34 +25,16 @@ const getNoun = async (req: Request, res: Response) => {
   }
 };
 
-const createNounGroup = async (req: Request, res: Response) => {
+const postNounGroup = async (req: Request, res: Response) => {
+  const Body = z.object({
+    nouns: z.array(NounZod).min(1),
+    categoryId: z.string().optional(),
+  });
+
   try {
-    const { nouns, categoryId } = req.body;
+    const { nouns, categoryId } = Body.parse(req.body);
 
-    if (!nouns || !Array.isArray(nouns) || nouns.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Nouns are requires in a non empty array." });
-    }
-
-    if (categoryId && typeof categoryId !== "string") {
-      return res.status(400).json({ error: "Category ID must be a string." });
-    }
-
-    const createdNounGroup = await prisma.nounGroup.create({
-      data: {
-        nouns: {
-          create: nouns.map((noun) => ({
-            language: noun.language,
-            definiteSingularArticle: noun.definiteSingularArticle,
-            indefiniteSingularArticle: noun.indefiniteSingularArticle,
-            definitePluralArticle: noun.definitePluralArticle,
-            singular: noun.singular,
-            plural: noun.plural,
-          })),
-        },
-      },
-    });
+    const createdNounGroup = await createNounGroup(nouns, categoryId);
 
     return res.status(201).json(createdNounGroup);
   } catch (error) {
@@ -65,33 +43,17 @@ const createNounGroup = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Fetches a noun group by its ID. If includeNouns is true, the
- * nouns of the noun group are included.
- *
- * @param id
- * @param includeNouns
- * @returns
- */
-const fetchNounGroupWithNouns = async (id: string, includeNouns: boolean) => {
-  return await prisma.nounGroup.findUnique({
-    where: { id },
-    include: { nouns: includeNouns },
-  });
-};
-
 const getNounGroup = async (req: Request, res: Response) => {
-  const Query = z.object({
+  const SearchParams = z.object({
     id: z.string(),
-    includeNouns: z
-      .enum(["true", "false"])
-      .transform((value) => value === "true")
-      .default("false"),
+    includingNouns: z.coerce.boolean().default(false),
   });
 
   try {
-    const { id, includeNouns } = Query.parse(req.query);
-    const nounGroup = await fetchNounGroupWithNouns(id, includeNouns);
+    const { id, includingNouns } = SearchParams.parse(req.query);
+
+    const nounGroup = await findNounGroupWithNouns(id, includingNouns);
+
     return res.status(200).json(nounGroup);
   } catch (error) {
     console.error(error);
@@ -99,79 +61,22 @@ const getNounGroup = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Fetches a specific amount of random noun groups. If includingNouns is true, the
- * nouns of the noun groups are included.
- *
- * @param amount
- * @param includingNouns
- * @returns
- */
-const fetchRandomNounGroups = async (
-  amount: number,
-  includingNouns: boolean
-) => {
-  // Using raw mongoDB queries here because Prisma does not support $sample
-  await mongoClient.connect();
-  const db = mongoClient.db("mulingu");
-  const collection = db.collection("NounGroup");
-
-  const pipeline = [
-    { $sample: { size: amount } },
-    {
-      $lookup: {
-        from: "Noun",
-        localField: "_id",
-        foreignField: "nounGroupId",
-        as: "nouns",
-      },
-    },
-    {
-      $addFields: {
-        nouns: {
-          $map: {
-            input: "$nouns",
-            as: "noun",
-            in: {
-              $mergeObjects: [
-                "$$noun",
-                {
-                  forms: includingNouns ? "$$noun.forms" : [],
-                },
-              ],
-            },
-          },
-        },
-      },
-    },
-  ];
-
-  const randomNounGroups = await collection.aggregate(pipeline).toArray();
-
-  await mongoClient.close();
-
-  return randomNounGroups;
-};
-
 const getRandomNounGroups = async (req: Request, res: Response) => {
-  const Query = z.object({
-    amount: z.number().default(10),
-    includingNouns: z
-      .enum(["true", "false"])
-      .transform((value) => value === "true")
-      .default("false"),
+  const SearchParams = z.object({
+    amount: z.number().min(1).default(10),
+    includingNouns: z.coerce.boolean().default(false),
+    languages: z.array(LanguageISOZod).default(["us", "de"]),
   });
 
   try {
-    const { amount, includingNouns } = Query.parse(req.query);
-    if (amount < 1) {
-      return res.status(400).json({ error: "Amount must be greater than 0." });
-    }
+    const { amount, includingNouns, languages } = SearchParams.parse(req.query);
 
-    const randomNounGroups = await fetchRandomNounGroups(
+    const randomNounGroups = await findRandomNounGroups(
       amount,
+      languages,
       includingNouns
     );
+
     return res.status(200).json(randomNounGroups);
   } catch (error) {
     console.error(error);
@@ -179,10 +84,4 @@ const getRandomNounGroups = async (req: Request, res: Response) => {
   }
 };
 
-export {
-  createNounGroup,
-  getNoun,
-  getNounGroup,
-  getRandomNounGroups,
-  fetchRandomNounGroups,
-};
+export { postNounGroup, getNoun, getNounGroup, getRandomNounGroups };

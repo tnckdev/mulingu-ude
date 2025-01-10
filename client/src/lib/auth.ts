@@ -23,7 +23,7 @@ const fetchProviders = async () => {
     );
     return res.data;
   } catch (error) {
-    console.error(error);
+     console.error(error);
   }
 };
 
@@ -34,7 +34,7 @@ const fetchCSRFToken = async () => {
     });
     return res.data;
   } catch (error) {
-    console.error(error);
+     console.error(error);
   }
 };
 
@@ -46,7 +46,7 @@ const fetchSession = async () => {
     );
     return res.data;
   } catch (error) {
-    console.error(error);
+     console.error(error);
   }
 };
 

@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 
+
 const NavbarLink = ({ to, text }: { to: string; text: string }) => {
   return (
     <Link

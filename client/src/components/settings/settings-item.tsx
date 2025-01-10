@@ -1,5 +1,5 @@
+import { FormDescription, FormItem, FormLabel } from "@/components/ui/form";
 import { ReactNode } from "react";
-import { FormDescription, FormItem, FormLabel } from "../ui/form";
 
 interface SettingsItemProps {
   children: ReactNode;

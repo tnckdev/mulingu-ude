@@ -1,12 +1,14 @@
+import LearningLanguagesSettings from "@/components/settings/learning-languages-settings";
+import NativeLanguageSettings from "@/components/settings/native-language-settings";
+import ThemeSettings from "@/components/settings/theme-settings";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { toast } from "@/hooks/use-toast";
+import { fetchSession } from "@/lib/auth";
 import {
   fetchUserSettings,
-  postUserSettings,
-  putUserSettings,
+  updateUserSettings,
 } from "@/lib/settings";
-import { fetchSession } from "@/utils/auth";
 import {
   LanguageItem,
   Session,
@@ -16,9 +18,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import LearningLanguagesSettings from "./learning-languages-settings";
-import NativeLanguageSettings from "./native-language-settings";
-import ThemeSettings from "./theme-settings";
 
 const languageItems: LanguageItem[] = [
   { id: "us", label: "English" },
@@ -68,13 +67,8 @@ const UserSettingsForm = () => {
       if (!session || !session.user) {
         return;
       }
-      const body: UserSettings = data;
-      const settingsExist = (await fetchUserSettings(session.user)) !== null;
-      if (!settingsExist) {
-        await postUserSettings(session.user, body);
-      } else {
-        await putUserSettings(session.user, body);
-      }
+      const userSettings: UserSettings = data;
+      await updateUserSettings(session.user, userSettings);
     };
 
     handleSubmit();

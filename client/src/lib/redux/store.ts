@@ -1,8 +1,8 @@
+import { learnSlice } from "@/lib/redux/slices/learn";
+import { userSlice } from "@/lib/redux/slices/user";
 import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { learnSlice } from "./learnSlice";
-import { userSlice } from "./slices/userSlice";
 
 const rootReducer = combineSlices(learnSlice, userSlice);
 

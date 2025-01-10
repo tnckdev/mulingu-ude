@@ -67,6 +67,7 @@ const ThemeProvider = ({
         setTheme(theme);
       },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [theme]
   );
 
@@ -86,4 +87,5 @@ const useTheme = () => {
   return context;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { ThemeProvider, useTheme };

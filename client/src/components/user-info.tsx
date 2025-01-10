@@ -1,5 +1,8 @@
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/hooks/redux";
-import { selectUser } from "@/utils/redux/slices/userSlice";
+import { selectUser } from "@/lib/redux/slices/user";
+import { NavLink } from "react-router";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarImage } from "./ui/avatar";
-import { NavLink } from "react-router";
-import { Button } from "./ui/button";
 
 const UserInfo = () => {
   const user = useAppSelector(selectUser);
@@ -33,11 +33,13 @@ const UserInfo = () => {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>
+                <NavLink to={"/settings"} className="text-foreground">Settings</NavLink>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <NavLink to={"/signout"}>Sign out</NavLink>
+              <NavLink to={"/signout"} className="text-foreground">Sign out</NavLink>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

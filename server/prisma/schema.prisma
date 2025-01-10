@@ -27,6 +27,7 @@ model User {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   UserSettings UserSettings[]
+  Ratings      Ratings[]
 }
 
 model Account {
@@ -101,6 +102,20 @@ model UserSettings {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Ratings {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String @db.ObjectId
+  language String
+  rating   Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, language])
+}
+
 /**
  * A Category groups NounGroups, VerbGroups and SentenceGroups.
  */
@@ -134,12 +149,11 @@ model Noun {
   singular                  String
   plural                    String
 
-  nounGroup   NounGroup  @relation(fields: [nounGroupId], references: [id])
-  nounGroupId String     @db.ObjectId
+  nounGroup   NounGroup @relation(fields: [nounGroupId], references: [id])
+  nounGroupId String    @db.ObjectId
 
   @@unique([language, definiteSingularArticle, definitePluralArticle, indefiniteSingularArticle, singular, plural])
 }
-
 
 /**
  * A SentenceGroup groups sentences with the same meaning in different languages.

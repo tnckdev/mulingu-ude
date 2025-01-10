@@ -13,13 +13,12 @@ import { authenticatedUser } from "./lib";
 import { userRouter } from "./routes/user-routes";
 import { verbRouter } from "./routes/verb-routes";
 import { sentenceRouter } from "./routes/sentence-routes";
-import { mongoClient } from "./mongo";
 import { nounRouter } from "./routes/noun-routes";
 
 dotenv.config();
 
 const app: Express = express();
-// const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 const corsOptions: CorsOptions = {
   origin: process.env.FRONTEND_URL,
@@ -62,8 +61,8 @@ app.use("/api/sentence", sentenceRouter);
 
 app.use("/api/noun", nounRouter);
 
-// app.listen(port, () => {
-//   console.log(`[server]: Server is running at http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+});
 
-export {app, prisma, mongoClient };
+export {app, prisma };

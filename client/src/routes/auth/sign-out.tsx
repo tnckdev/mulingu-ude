@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { CSRFResponse, fetchCSRFToken } from "@/utils/auth";
+import { CSRFResponse, fetchCSRFToken } from "@/lib/auth";
 import { useEffect, useRef, useState } from "react";
-import ProtectedRoute from "./protected-route";
+import ProtectedRoute from "../protected-route";
 
 const SignOut = () => {
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
@@ -36,7 +36,7 @@ const SignOut = () => {
 
   return (
     <ProtectedRoute>
-      <div className="flex flex-col items-center justify-center gap-5">
+      <div className="flex flex-col items-center justify-center gap-5 w-full">
         {/* <Earth size={75} /> */}
         <Card className="w-1/4">
           <CardHeader>

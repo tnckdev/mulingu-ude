@@ -1,14 +1,14 @@
+import AnswerBuilder from "@/components/learn/answer-builder";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import getFlagEmoji from "@/utils/flags";
 import {
   selectTask,
   selectTaskISO,
   selectTaskISOs,
   updateTaskISO,
-} from "@/utils/redux/learnSlice";
+} from "@/lib/redux/slices/learn";
+import getFlagEmoji from "@/utils/flags";
 import clsx from "clsx";
-import AnswerBuilder from "./answer-builder";
 
 const MultiAnswerBuilder = ({ index }: { index: number }) => {
   const dispatch = useAppDispatch();

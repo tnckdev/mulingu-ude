@@ -1,13 +1,14 @@
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { selectText, updateTaskAnswerText } from "@/utils/redux/learnSlice";
+import { selectText, updateTaskAnswerText } from "@/lib/redux/slices/learn";
+import { LanguageISO } from "@/utils/types";
 
 const SimpleAnswerBuilder = ({
   index,
   iso,
 }: {
   index: number;
-  iso: string;
+  iso: LanguageISO;
 }) => {
   const dispatch = useAppDispatch();
 

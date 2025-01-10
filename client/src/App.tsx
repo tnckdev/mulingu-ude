@@ -1,53 +1,68 @@
 import "@/App.css";
-import Navbar from "@/components/navbar";
-import { ThemeProvider } from "@/components/theme-provider";
-import ComponentCollection from "@/routes/component-collection";
-import Dictionary from "@/routes/dictionary";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+// import ComponentCollection from "@/routes/component-collection";
+// import Dictionary from "@/routes/dictionary";
 import Home from "@/routes/home";
 import Learn from "@/routes/learn";
-import { BrowserRouter, Route, Routes } from "react-router";
-import { SessionProvider } from "./components/session-provider";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router";
+import ImpressumLayout from "./components/impressum-layout";
+import { SessionProvider } from "./components/providers/session-provider";
+import StandardLayout from "./components/standard-layout";
 import { Toaster } from "./components/ui/toaster";
-import AuthError from "./routes/auth-error";
-import Categories from "./routes/categories";
-import Leaderbord from "./routes/leaderboard";
+import AuthError from "./routes/auth/auth-error";
+import SignIn from "./routes/auth/sign-in";
+import SignOut from "./routes/auth/sign-out";
+// import Categories from "./routes/categories";
+import Impressum from "./routes/impressum";
+// import Leaderbord from "./routes/leaderboard";
 import Settings from "./routes/settings";
-import SignIn from "./routes/sign-in";
-import SignOut from "./routes/sign-out";
 import Welcome from "./routes/welcome";
 
 function App() {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/">
+        <Route element={<StandardLayout />}>
+          <Route index element={<Home />} />
+
+          {/* <Route path="components" element={<ComponentCollection />} /> */}
+
+          <Route path="learn" element={<Learn />} />
+
+          {/* <Route path="dictionary" element={<Dictionary />} />
+
+          <Route path="leaderboard" element={<Leaderbord />} />
+
+          <Route path="categories" element={<Categories />} /> */}
+
+          <Route path="welcome" element={<Welcome />} />
+
+          <Route path="settings" element={<Settings />} />
+
+          <Route path="impressum" element={<Impressum />} />
+        </Route>
+
+        <Route element={<ImpressumLayout />}>
+          <Route path="signin" element={<SignIn />} />
+          <Route path="signout" element={<SignOut />} />
+          <Route path="auth-error" element={<AuthError />} />
+        </Route>
+      </Route>
+    )
+  );
+
   return (
     <>
       <SessionProvider>
-        <BrowserRouter>
-          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <Routes>
-              <Route element={<Navbar />}>
-                <Route index element={<Home />} />
-
-                <Route path="components" element={<ComponentCollection />} />
-
-                <Route path="learn" element={<Learn />} />
-
-                <Route path="dictionary" element={<Dictionary />} />
-
-                <Route path="leaderboard" element={<Leaderbord />} />
-
-                <Route path="categories" element={<Categories />} />
-
-                <Route path="welcome" element={<Welcome />} />
-
-                <Route path="settings" element={<Settings />} />
-              </Route>
-
-              <Route path="signin" element={<SignIn />} />
-              <Route path="signout" element={<SignOut />} />
-              <Route path="auth-error" element={<AuthError />} />
-            </Routes>
-            <Toaster />
-          </ThemeProvider>
-        </BrowserRouter>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <RouterProvider router={router} />
+          <Toaster />
+        </ThemeProvider>
       </SessionProvider>
     </>
   );

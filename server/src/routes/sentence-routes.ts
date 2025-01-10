@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-  createSentenceGroup,
   getRandomSentenceGroups,
   getSentence,
   getSentenceGroup,
+  postSentenceGroup,
 } from "../controllers/sentence-controller";
 
 const sentenceRouter = Router();
@@ -13,7 +13,7 @@ sentenceRouter.get("/", async (req, res) => {
 });
 
 sentenceRouter.post("/group", async (req, res) => {
-  await createSentenceGroup(req, res);
+  await postSentenceGroup(req, res);
 });
 
 sentenceRouter.get("/group", async (req, res) => {
