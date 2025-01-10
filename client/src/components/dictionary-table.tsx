@@ -70,31 +70,32 @@ export default function DictionaryTable() {
         filterPlaceholder="Filter words..."
         filterColumn="word"
         columns={columns}
-        data={[
-          { article: "der", word: "Mann", iso: "DE", fluency: 2.7 },
-          { article: "the", word: "man", iso: "US", fluency: 3.4 },
-          { article: "den", word: "mann", iso: "NO", fluency: 1.87 },
-          { article: "el", word: "hombre", iso: "ES", fluency: 4.2 },
-          { article: "le", word: "homme", iso: "FR", fluency: 0.69 },
+        data={[]}
+        // data={[
+        //   { article: "der", word: "Mann", iso: "DE", fluency: 2.7 },
+        //   { article: "the", word: "man", iso: "US", fluency: 3.4 },
+        //   { article: "den", word: "mann", iso: "NO", fluency: 1.87 },
+        //   { article: "el", word: "hombre", iso: "ES", fluency: 4.2 },
+        //   { article: "le", word: "homme", iso: "FR", fluency: 0.69 },
 
-          { article: "die", word: "Frau", iso: "DE", fluency: 0.42 },
-          { article: "the", word: "woman", iso: "US", fluency: 2.2 },
-          { article: "den", word: "kvinne", iso: "NO", fluency: 1.6 },
-          { article: "la", word: "mujer", iso: "ES", fluency: 3.2 },
-          { article: "la", word: "femme", iso: "FR", fluency: 5.0 },
+        //   { article: "die", word: "Frau", iso: "DE", fluency: 0.42 },
+        //   { article: "the", word: "woman", iso: "US", fluency: 2.2 },
+        //   { article: "den", word: "kvinne", iso: "NO", fluency: 1.6 },
+        //   { article: "la", word: "mujer", iso: "ES", fluency: 3.2 },
+        //   { article: "la", word: "femme", iso: "FR", fluency: 5.0 },
 
-          { article: "der", word: "Apfel", iso: "DE", fluency: 1.3 },
-          { article: "the", word: "apple", iso: "US", fluency: 2.4 },
-          { article: "det", word: "eple", iso: "NO", fluency: 3.1 },
-          { article: "la", word: "manzana", iso: "ES", fluency: 2.1 },
-          { article: "la", word: "pomme", iso: "FR", fluency: 2.75 },
+        //   { article: "der", word: "Apfel", iso: "DE", fluency: 1.3 },
+        //   { article: "the", word: "apple", iso: "US", fluency: 2.4 },
+        //   { article: "det", word: "eple", iso: "NO", fluency: 3.1 },
+        //   { article: "la", word: "manzana", iso: "ES", fluency: 2.1 },
+        //   { article: "la", word: "pomme", iso: "FR", fluency: 2.75 },
 
-          { article: "das", word: "Haus", iso: "DE", fluency: 0.3 },
-          { article: "the", word: "house", iso: "US", fluency: 4.2 },
-          { article: "det", word: "hus", iso: "NO", fluency: 5.0 },
-          { article: "la", word: "casa", iso: "ES", fluency: 0.3 },
-          { article: "la", word: "maison", iso: "FR", fluency: 0.0 },
-        ]}
+        //   { article: "das", word: "Haus", iso: "DE", fluency: 0.3 },
+        //   { article: "the", word: "house", iso: "US", fluency: 4.2 },
+        //   { article: "det", word: "hus", iso: "NO", fluency: 5.0 },
+        //   { article: "la", word: "casa", iso: "ES", fluency: 0.3 },
+        //   { article: "la", word: "maison", iso: "FR", fluency: 0.0 },
+        // ]}
         className="w-1/2"
       />
     </div>
