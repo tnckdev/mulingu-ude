@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../prisma";
 import { z } from "zod";
 import { getUserSession } from "../lib";
-import { LanguageISOZod } from "../types";
+import { LanguageISO, LanguageISOZod } from "../types";
 import { findRandomNounGroups } from "../lib/noun-connector";
 import { findRandomVerbGroups } from "../lib/verb-connector";
 import { findRandomSentenceGroups } from "../lib/sentence-connector";
@@ -16,12 +16,16 @@ const getRandomTasks = async (req: Request, res: Response) => {
   });
 
   try {
-    const { nouns, verbs, sentences, languages } = SearchParams.parse(
-      req.query
-    );
+    // const { nouns, verbs, sentences, languages } = SearchParams.parse(
+    //   req.query
+    // );
+
+    const nouns = 4;
+    const verbs = 3;
+    const sentences = 3;
+    const languages: LanguageISO[] = ["us", "de", "fr", "es"];
 
     console.log(nouns, verbs, sentences, languages);
-    
 
     const randomNounGroups = await findRandomNounGroups(nouns, languages, true);
     const randomVerbGroups = await findRandomVerbGroups(verbs, languages, true);
