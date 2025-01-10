@@ -1,13 +1,13 @@
 import LearnArea from "@/components/learn/learn-area";
 import NavigationDialogBlocker from "@/components/navigation-blocker-dialog";
 import { useSession } from "@/components/providers/session-provider";
-import { useAppDispatch } from "@/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchRandomTasks } from "@/lib/learn";
 import { updateTasks } from "@/lib/redux/slices/learn";
 import { transformTasks } from "@/lib/transformers/learn-task-transformer";
 import { useEffect, useState } from "react";
 import ProtectedRoute from "./protected-route";
-import { LanguageISO } from "@/utils/types";
+import { selectUserSettings } from "@/lib/redux/slices/user";
 
 export default function Learn() {
   const [loading, setLoading] = useState(true);
@@ -15,14 +15,12 @@ export default function Learn() {
 
   const dispatch = useAppDispatch();
 
-  //const userSettings = useAppSelector(selectUserSettings);
+  const userSettings = useAppSelector(selectUserSettings);
 
   useEffect(() => {
     const setTasks = async () => {
       try {
-        const testLanguages: LanguageISO[] = ["us", "de", "fr", "es"];
-
-        const fetchedTasks = await fetchRandomTasks(4, 3, 3, testLanguages);
+        const fetchedTasks = await fetchRandomTasks(4, 3, 3, userSettings.languages);
         const transformedTasks = transformTasks(fetchedTasks);
         dispatch(updateTasks(transformedTasks));
         setLoading(false);

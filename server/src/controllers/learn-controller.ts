@@ -20,6 +20,9 @@ const getRandomTasks = async (req: Request, res: Response) => {
     //   req.query
     // );
 
+    console.log(req.query);
+    
+
     const nouns = 4;
     const verbs = 3;
     const sentences = 3;
