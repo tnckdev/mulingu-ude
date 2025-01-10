@@ -7,17 +7,16 @@ const fetchRandomTasks = async (
   verbs: number,
   languages: LanguageISO[]
 ) => {
-  const languageQuery = languages.join("&languages=");
-
   const params = {
     sentences,
     nouns,
     verbs,
+    languages: languages.join(","),
   };
 
   try {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/learn/random?languages=${languageQuery}`,
+      `${import.meta.env.VITE_API_URL}/learn/random`,
       {
         params,
         withCredentials: true,

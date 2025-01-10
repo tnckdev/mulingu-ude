@@ -12,21 +12,19 @@ const getRandomTasks = async (req: Request, res: Response) => {
     nouns: z.coerce.number().default(1),
     verbs: z.coerce.number().default(1),
     sentences: z.coerce.number().default(1),
-    languages: z.array(LanguageISOZod).default(["us", "de"]),
+    languages: z
+      .preprocess((val) => {
+        if (typeof val === "string") {
+          return val.split(",").map((lang) => lang.trim()) as LanguageISO[];
+        }
+      }, z.array(LanguageISOZod))
+      .default(["us", "de"]),
   });
 
   try {
-    // const { nouns, verbs, sentences, languages } = SearchParams.parse(
-    //   req.query
-    // );
-
-    console.log(req.query);
-    
-
-    const nouns = 4;
-    const verbs = 3;
-    const sentences = 3;
-    const languages: LanguageISO[] = ["us", "de", "fr", "es"];
+    const { nouns, verbs, sentences, languages } = SearchParams.parse(
+      req.query
+    );
 
     console.log(nouns, verbs, sentences, languages);
 
