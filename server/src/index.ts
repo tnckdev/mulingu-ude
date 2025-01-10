@@ -43,6 +43,32 @@ export const authConfig: ExpressAuthConfig = {
     signOut: `${process.env.FRONTEND_URL}/signout`,
     error: `${process.env.FRONTEND_URL}/auth-error`,
   },
+  cookies: {
+    sessionToken: {
+      name: "__Secure-authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      },
+    },
+    csrfToken: {
+      name: "__Host-authjs.csrf-token",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      },
+    },
+    callbackUrl: {
+      name: "__Secure-authjs.callback-url",
+      options: {
+        httpOnly: false,
+        sameSite: "none",
+        secure: true,
+      },
+    },
+  },
 };
 
 app.use("/api/auth/*", ExpressAuth(authConfig));
@@ -65,4 +91,4 @@ app.use("/api/noun", nounRouter);
 //   console.log(`[server]: Server is running at http://localhost:${port}`);
 // });
 
-export {app, prisma };
+export { app, prisma };
