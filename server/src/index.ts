@@ -92,7 +92,7 @@ app.use("/api/noun", nounRouter);
 // });
 
 app.use((req, res) => {
-  res.status(404).json({ error: "Not found" });
+  res.status(404).send("404 - Not Found");
 });
 
 export { app, prisma };
