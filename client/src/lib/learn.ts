@@ -5,9 +5,12 @@ const fetchRandomTasks = async (
   sentences: number,
   nouns: number,
   verbs: number,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   languages: LanguageISO[]
 ) => {
-  const languageQuery = languages.join("&languages=");
+  const testLanguages: LanguageISO[] = ["us", "de"];
+
+  const languageQuery = testLanguages.join("&languages=");
 
   const params = {
     sentences,
