@@ -2,9 +2,11 @@ import { createAppSlice } from "@/lib/redux/createAppSlice";
 import { Difficulty, LanguageISO, Reference, Task } from "@/utils/types";
 import { createSelector, PayloadAction } from "@reduxjs/toolkit";
 
+
 export interface LearnSliceState {
   tasks: Task[];
   currentIndex: number;
+  showingSolution: boolean;
 }
 
 const initialState: LearnSliceState = {
@@ -25,6 +27,7 @@ const initialState: LearnSliceState = {
     },
   ],
   currentIndex: 0,
+  showingSolution: false,
 };
 
 export const learnSlice = createAppSlice({
@@ -145,12 +148,17 @@ export const learnSlice = createAppSlice({
       const answer = task.answers[iso];
       if (answer) answer.difficulty = difficulty;
     },
+
+    updateShowingSolution: (state, action: PayloadAction<boolean>) => {
+      state.showingSolution = action.payload;
+    },
   },
   selectors: {
     selectTasks: (state) => state.tasks,
     selectCurrentIndex: (state) => state.currentIndex,
     selectCurrentTask: (state) => state.tasks[state.currentIndex],
     selectTaskAmount: (state) => state.tasks.length,
+    selectShowingSolution: (state) => state.showingSolution,
   },
 });
 
@@ -256,6 +264,7 @@ export const {
   prev,
   updateCurrentIndex,
   updateReference,
+  updateShowingSolution,
   updateTask,
   updateTaskISO,
   updateTaskAnswerText,
@@ -271,6 +280,7 @@ export const {
   selectCurrentIndex,
   selectCurrentTask,
   selectTaskAmount,
+  selectShowingSolution,
 } = learnSlice.selectors;
 
 export {

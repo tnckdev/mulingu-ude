@@ -29,7 +29,7 @@ const NativeLanguageSettings = ({
       render={({ field }) => (
         <SettingsItem
           label="Native Language"
-          description="Select your native language."
+          description="Select your native language. Might be used for i18n in the future."
         >
           <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>

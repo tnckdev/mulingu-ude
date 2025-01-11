@@ -1,6 +1,6 @@
 import CategoryCard from "@/components/category-card";
 import { Category } from "@/utils/types";
-import ProtectedRoute from "./protected-route";
+import ProtectedRoute from "@/routes/protected-route";
 
 const Categories = () => {
   const categories: Category[] = [

@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 const UserInfo = () => {
   const user = useAppSelector(selectUser);
@@ -32,7 +32,7 @@ const UserInfo = () => {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              {/* <DropdownMenuItem>Profile</DropdownMenuItem> */}
               <DropdownMenuItem>
                 <NavLink to={"/settings"} className="text-foreground">Settings</NavLink>
               </DropdownMenuItem>

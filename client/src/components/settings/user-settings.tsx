@@ -3,12 +3,11 @@ import NativeLanguageSettings from "@/components/settings/native-language-settin
 import ThemeSettings from "@/components/settings/theme-settings";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useAppDispatch } from "@/hooks/redux";
 import { toast } from "@/hooks/use-toast";
 import { fetchSession } from "@/lib/auth";
-import {
-  fetchUserSettings,
-  updateUserSettings,
-} from "@/lib/settings";
+import { setUserSettings } from "@/lib/redux/slices/user";
+import { fetchUserSettings, updateUserSettings } from "@/lib/settings";
 import {
   LanguageItem,
   Session,
@@ -56,6 +55,8 @@ const defaultValues = async (): Promise<z.infer<typeof SettingsFormSchema>> => {
 };
 
 const UserSettingsForm = () => {
+  const dispatch = useAppDispatch();
+
   const form = useForm<z.infer<typeof SettingsFormSchema>>({
     resolver: zodResolver(SettingsFormSchema),
     defaultValues: async () => defaultValues(),
@@ -68,6 +69,7 @@ const UserSettingsForm = () => {
         return;
       }
       const userSettings: UserSettings = data;
+      dispatch(setUserSettings(userSettings));
       await updateUserSettings(session.user, userSettings);
     };
 
@@ -80,7 +82,7 @@ const UserSettingsForm = () => {
   };
 
   return (
-    <div className="w-1/2">
+    <div className="w-full">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

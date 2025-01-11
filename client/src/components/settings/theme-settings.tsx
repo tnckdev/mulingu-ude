@@ -10,7 +10,7 @@ import {
 import { SettingsFormSchema } from "@/utils/types";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import SettingsItem from "./settings-item";
+import SettingsItem from "@/components/settings/settings-item";
 
 interface ThemeSettingsProps {
   form: UseFormReturn<z.infer<typeof SettingsFormSchema>>;

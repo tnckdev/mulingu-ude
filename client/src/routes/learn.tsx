@@ -3,15 +3,17 @@ import NavigationDialogBlocker from "@/components/navigation-blocker-dialog";
 import { useSession } from "@/components/providers/session-provider";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchRandomTasks } from "@/lib/learn";
-import { updateTasks } from "@/lib/redux/slices/learn";
+import { updateShowingSolution, updateTasks } from "@/lib/redux/slices/learn";
+import { selectUserSettings } from "@/lib/redux/slices/user";
 import { transformTasks } from "@/lib/transformers/learn-task-transformer";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import ProtectedRoute from "./protected-route";
-import { selectUserSettings } from "@/lib/redux/slices/user";
 
 export default function Learn() {
   const [loading, setLoading] = useState(true);
   const session = useSession();
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
 
@@ -20,7 +22,17 @@ export default function Learn() {
   useEffect(() => {
     const setTasks = async () => {
       try {
-        const fetchedTasks = await fetchRandomTasks(4, 3, 3, userSettings.languages);
+        if (!userSettings) {
+          navigate("/welcome");
+          return;
+        }
+
+        const fetchedTasks = await fetchRandomTasks(
+          4,
+          3,
+          3,
+          userSettings.languages
+        );
         const transformedTasks = transformTasks(fetchedTasks);
         dispatch(updateTasks(transformedTasks));
         setLoading(false);
@@ -28,6 +40,8 @@ export default function Learn() {
         console.error(error);
       }
     };
+
+    dispatch(updateShowingSolution(false));
 
     if (!session.loading && session.session) setTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps

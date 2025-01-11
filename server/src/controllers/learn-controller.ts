@@ -26,7 +26,7 @@ const getRandomTasks = async (req: Request, res: Response) => {
       req.query
     );
 
-    console.log(nouns, verbs, sentences, languages);
+    // console.log(nouns, verbs, sentences, languages);
 
     const randomNounGroups = await findRandomNounGroups(nouns, languages, true);
     const randomVerbGroups = await findRandomVerbGroups(verbs, languages, true);

@@ -1,11 +1,19 @@
 import TaskSubmissionDialog from "@/components/learn/task-submission-dialog";
 import { Button } from "@/components/ui/button";
+import { useAppDispatch } from "@/hooks/redux";
 import useSubmitAnswers from "@/hooks/use-submit-answers";
 import { toast } from "@/hooks/use-toast";
+import { updateShowingSolution } from "@/lib/redux/slices/learn";
+import { RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 const TaskSubmissionButton = () => {
   const { allTasksCompleted, submitted, submitAnswers } = useSubmitAnswers();
+
+  const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (submitted === undefined) {
@@ -36,20 +44,30 @@ const TaskSubmissionButton = () => {
   const onSubmit = () => {
     setOpen(false);
     submitAnswers();
+    dispatch(updateShowingSolution(true));
   };
 
   const [open, setOpen] = useState(false);
 
   return (
-    <div>
-      <Button onClick={handleSubmit} disabled={submitted} className="w-1/3">
-        Submit
-      </Button>
+    <div className="flex flex-col items-center gap-3">
+      {!submitted && (
+        <Button onClick={handleSubmit} disabled={submitted} className="w-fit">
+          Submit answers
+        </Button>
+      )}
       <TaskSubmissionDialog
         open={open}
         onClose={() => setOpen(false)}
         onSubmit={onSubmit}
       />
+      {submitted && (
+        <div className="pt-10">
+          <Button className="w-fit" onClick={() => navigate(0)}>
+            Train again <RotateCcw />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

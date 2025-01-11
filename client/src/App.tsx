@@ -10,18 +10,18 @@ import {
   Route,
   RouterProvider,
 } from "react-router";
-import ImpressumLayout from "./components/impressum-layout";
-import { SessionProvider } from "./components/providers/session-provider";
-import StandardLayout from "./components/standard-layout";
-import { Toaster } from "./components/ui/toaster";
-import AuthError from "./routes/auth/auth-error";
-import SignIn from "./routes/auth/sign-in";
-import SignOut from "./routes/auth/sign-out";
+import ImpressumLayout from "@/components/impressum-layout";
+import { SessionProvider } from "@/components/providers/session-provider";
+import StandardLayout from "@/components/standard-layout";
+import { Toaster } from "@/components/ui/toaster";
+import AuthError from "@/routes/auth/auth-error";
+import SignIn from "@/routes/auth/sign-in";
+import SignOut from "@/routes/auth/sign-out";
 // import Categories from "./routes/categories";
-import Impressum from "./routes/impressum";
+import Impressum from "@/routes/impressum";
 // import Leaderbord from "./routes/leaderboard";
-import Settings from "./routes/settings";
-import Welcome from "./routes/welcome";
+import Settings from "@/routes/settings";
+import Welcome from "@/routes/welcome";
 
 function App() {
   const router = createBrowserRouter(

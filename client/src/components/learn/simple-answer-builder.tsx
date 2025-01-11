@@ -1,6 +1,10 @@
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { selectText, updateTaskAnswerText } from "@/lib/redux/slices/learn";
+import {
+  selectShowingSolution,
+  selectText,
+  updateTaskAnswerText,
+} from "@/lib/redux/slices/learn";
 import { LanguageISO } from "@/utils/types";
 
 const SimpleAnswerBuilder = ({
@@ -16,8 +20,11 @@ const SimpleAnswerBuilder = ({
     selectText(state.learn, { index, iso })
   );
 
+  const showingSolution = useAppSelector(selectShowingSolution);
+
   return (
     <Input
+      disabled={showingSolution}
       placeholder="Your answer is..."
       value={text}
       onChange={(event) =>

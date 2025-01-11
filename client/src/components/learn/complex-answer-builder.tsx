@@ -6,8 +6,10 @@ import {
   selectAvailableStrings,
   selectKind,
   selectSelectedStrings,
+  selectShowingSolution,
   selectSolution,
   updateAvailableStrings,
+  updateTaskAnswerText,
 } from "@/lib/redux/slices/learn";
 import { shuffled } from "@/utils/fisher-yates";
 import { LanguageISO } from "@/utils/types";
@@ -28,6 +30,8 @@ const ComplexAnswerBuilder = ({
     selectSolution(state.learn, { index, iso })
   );
 
+  const showingSolution = useAppSelector(selectShowingSolution);
+
   const availableStrings =
     useAppSelector((state) =>
       selectAvailableStrings(state.learn, { index, iso })
@@ -39,9 +43,11 @@ const ComplexAnswerBuilder = ({
     ) || [];
 
   useEffect(() => {
+    const solutionLength = solution.split(kind === "word" ? "" : " ").length;
+
     if (
       availableStrings.length === 0 &&
-      selectedStrings.length !== solution.length
+      selectedStrings.length !== solutionLength
     ) {
       const strings = solution.split(kind === "word" ? "" : " ");
       dispatch(
@@ -52,21 +58,21 @@ const ComplexAnswerBuilder = ({
         })
       );
     }
-  }, [
-    availableStrings.length,
-    dispatch,
-    index,
-    iso,
-    kind,
-    selectedStrings.length,
-    solution,
-  ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStrings]);
+
+  useEffect(() => {
+    const text = selectedStrings.join(kind === "word" ? "" : " ");
+    dispatch(updateTaskAnswerText({ index, iso, text }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStrings]);
 
   return (
     <div className="flex flex-col gap-5 items-center justify-items-center p-5">
       <div className="flex flex-wrap gap-2 w-full items-center justify-center min-h-10">
         {selectedStrings.map((str, i) => (
           <Button
+            disabled={showingSolution}
             key={`selected-${i}`}
             onClick={() =>
               dispatch(removeSelectedString({ index, iso, strIndex: i }))
@@ -80,6 +86,7 @@ const ComplexAnswerBuilder = ({
       <div className="flex flex-wrap gap-2 w-full items-center justify-center min-h-10">
         {availableStrings.map((str, i) => (
           <Button
+            disabled={showingSolution}
             key={`selected-${i}`}
             onClick={() =>
               dispatch(addSelectedString({ index, iso, strIndex: i }))

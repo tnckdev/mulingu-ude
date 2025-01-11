@@ -4,7 +4,7 @@ import ProtectedRoute from "./protected-route";
 const Settings = () => {
   return (
     <ProtectedRoute>
-      <div className="flex items-center justify-center w-full">
+      <div className="flex items-center justify-center w-1/2">
         <UserSettingsForm />
       </div>
     </ProtectedRoute>

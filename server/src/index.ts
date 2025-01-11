@@ -87,9 +87,9 @@ app.use("/api/sentence", sentenceRouter);
 
 app.use("/api/noun", nounRouter);
 
-// app.listen(port, () => {
-//   console.log(`[server]: Server is running at http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+});
 
 app.use((req, res) => {
   res.status(404).send("404 - Not Found");
