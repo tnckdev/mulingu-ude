@@ -22,6 +22,8 @@ import Impressum from "@/routes/impressum";
 // import Leaderbord from "./routes/leaderboard";
 import Settings from "@/routes/settings";
 import Welcome from "@/routes/welcome";
+import Leaderbord from "./routes/leaderboard";
+import Dictionary from "./routes/dictionary";
 
 function App() {
   const router = createBrowserRouter(
@@ -34,11 +36,11 @@ function App() {
 
           <Route path="learn" element={<Learn />} />
 
-          {/* <Route path="dictionary" element={<Dictionary />} />
+          <Route path="dictionary" element={<Dictionary />} />
 
           <Route path="leaderboard" element={<Leaderbord />} />
 
-          <Route path="categories" element={<Categories />} /> */}
+          {/* <Route path="categories" element={<Categories />} /> */}
 
           <Route path="welcome" element={<Welcome />} />
 

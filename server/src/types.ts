@@ -135,6 +135,9 @@ const VerbGroup = z.object({
 });
 type VerbGroup = z.infer<typeof VerbGroup>;
 
+const RatingLanguageZod = z.union([LanguageISOZod, z.literal("total")]);
+type RatingLanguage = z.infer<typeof RatingLanguageZod>;
+
 export type {
   Answer,
   Theme,
@@ -143,6 +146,7 @@ export type {
   LanguageISO,
   UserSettings,
   LanguageItem,
+  RatingLanguage,
   Noun,
   NounGroup,
   NounTaskKind,
@@ -163,4 +167,5 @@ export {
   SentenceZod,
   NounZod,
   UserSettingsZod,
+  RatingLanguageZod,
 };

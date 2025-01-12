@@ -14,6 +14,8 @@ import { userRouter } from "./routes/user-routes";
 import { verbRouter } from "./routes/verb-routes";
 import { sentenceRouter } from "./routes/sentence-routes";
 import { nounRouter } from "./routes/noun-routes";
+import { ratingRouter } from "./routes/rating-routes";
+import { mulinguApi } from "./routes/api";
 
 dotenv.config();
 
@@ -77,19 +79,15 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-app.use("/api/learn", learnRouter);
+app.use("/api", authenticatedUser, mulinguApi);
 
-app.use("/api/user", authenticatedUser, userRouter);
-
-app.use("/api/verb", verbRouter);
-
-app.use("/api/sentence", sentenceRouter);
-
-app.use("/api/noun", nounRouter);
-
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`[server]: Server is running at http://localhost:${port}`);
+  });
+} else {
+  console.log("[server]: Not running in production mode.");
+}
 
 app.use((req, res) => {
   res.status(404).send("404 - Not Found");

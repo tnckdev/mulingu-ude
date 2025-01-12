@@ -19,6 +19,8 @@ const Navbar = () => {
           <nav className="hidden md:flex gap-4">
             <NavbarLink to={"/"} text={"Home"} />
             <NavbarLink to={"/learn"} text={"Learn"} />
+            <NavbarLink to={"/leaderboard"} text={"Leaderboard"} />
+            <NavbarLink to={"/dictionary"} text={"Dictionary"} />
           </nav>
 
           <div className="flex items-center gap-4">

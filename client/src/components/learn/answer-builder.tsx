@@ -9,7 +9,7 @@ import {
   updateDifficulty,
 } from "@/lib/redux/slices/learn";
 import { LanguageISO } from "@/utils/types";
-import SolutionCard from "./solution-card";
+import SolutionCard from "@/components/learn/solution-card";
 
 const AnswerBuilder = ({ index, iso }: { index: number; iso: LanguageISO }) => {
   const dispatch = useAppDispatch();

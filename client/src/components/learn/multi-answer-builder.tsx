@@ -20,7 +20,7 @@ const MultiAnswerBuilder = ({ index }: { index: number }) => {
   return (
     <div className="w-full flex flex-col gap-3">
       <h1 className="font-bold">{task.reference.text}</h1>
-      <div className="w-full flex border rounded-xl p-2">
+      <div className="w-full flex border rounded-lg p-2">
         {ISOs.map((iso) => (
           <Button
             key={`selector-${index}-${iso}`}

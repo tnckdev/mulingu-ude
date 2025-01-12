@@ -35,7 +35,7 @@ const TaskSubmissionButton = () => {
 
   const handleSubmit = () => {
     if (allTasksCompleted) {
-      submitAnswers();
+      onSubmit();
     } else {
       setOpen(true);
     }
