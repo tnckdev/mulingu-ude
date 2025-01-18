@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/ui/data-table";
 import { Input } from "@/components/ui/input";
-import { Verb } from "@/utils/types";
+import { StandardVerb } from "@/utils/types";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,8 +13,8 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-const VerbTable = ({ data }: { data: Verb[] }) => {
-  const columns: ColumnDef<Verb>[] = [
+const VerbTable = ({ data }: { data: StandardVerb[] }) => {
+  const columns: ColumnDef<StandardVerb>[] = [
     {
       accessorKey: "infinitive",
       header: "Infinitive",

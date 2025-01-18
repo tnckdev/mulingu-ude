@@ -1,0 +1,81 @@
+model VerbAggregation {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    de GermanVerb    @relation(fields: [germanVerbId], references: [id])
+    us EnglishVerb   @relation(fields: [englishVerbId], references: [id])
+    es SpanishVerb   @relation(fields: [spanishVerbId], references: [id])
+    fr FrenchVerb    @relation(fields: [frenchVerbId], references: [id])
+    no NorwegianVerb @relation(fields: [norwegianVerbId], references: [id])
+
+    germanVerbId    String @db.ObjectId
+    englishVerbId   String @db.ObjectId
+    spanishVerbId   String @db.ObjectId
+    frenchVerbId    String @db.ObjectId
+    norwegianVerbId String @db.ObjectId
+}
+
+model GermanVerb {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    infinitive      String
+    forms           VerbForm[]
+    VerbAggregation VerbAggregation[]
+}
+
+model EnglishVerb {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    infinitive      String
+    forms           VerbForm[]
+    VerbAggregation VerbAggregation[]
+}
+
+model SpanishVerb {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    infinitive      String
+    forms           VerbForm[]
+    VerbAggregation VerbAggregation[]
+}
+
+model FrenchVerb {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    infinitive      String
+    forms           VerbForm[]
+    VerbAggregation VerbAggregation[]
+}
+
+model NorwegianVerb {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    infinitive      String
+    present         String
+    preterite       String
+    perfect         String
+    future          String
+    VerbAggregation VerbAggregation[]
+}
+
+model VerbForm {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    form String
+
+    firstPersonSingular  String
+    secondPersonSingular String
+    thirdPersonSingular  String
+
+    firstPersonPlural  String
+    secondPersonPlural String
+    thirdPersonPlural  String
+
+    EnglishVerb   EnglishVerb? @relation(fields: [englishVerbId], references: [id])
+    englishVerbId String?      @db.ObjectId
+    GermanVerb    GermanVerb?  @relation(fields: [germanVerbId], references: [id])
+    germanVerbId  String?      @db.ObjectId
+    SpanishVerb   SpanishVerb? @relation(fields: [spanishVerbId], references: [id])
+    spanishVerbId String?      @db.ObjectId
+    FrenchVerb    FrenchVerb?  @relation(fields: [frenchVerbId], references: [id])
+    frenchVerbId  String?      @db.ObjectId
+}

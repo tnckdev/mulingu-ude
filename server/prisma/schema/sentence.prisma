@@ -1,0 +1,49 @@
+model SentenceAggregation {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    de                  GermanSentence    @relation(fields: [germanSentenceId], references: [id])
+    us                  EnglishSentence   @relation(fields: [englishSentenceId], references: [id])
+    es                  SpanishSentence   @relation(fields: [spanishSentenceId], references: [id])
+    fr                  FrenchSentence    @relation(fields: [frenchSentenceId], references: [id])
+    no                  NorwegianSentence @relation(fields: [norwegianSentenceId], references: [id])
+    germanSentenceId    String            @db.ObjectId
+    englishSentenceId   String            @db.ObjectId
+    spanishSentenceId   String            @db.ObjectId
+    frenchSentenceId    String            @db.ObjectId
+    norwegianSentenceId String            @db.ObjectId
+}
+
+model GermanSentence {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    sentence            String
+    SentenceAggregation SentenceAggregation[]
+}
+
+model EnglishSentence {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    sentence            String
+    SentenceAggregation SentenceAggregation[]
+}
+
+model SpanishSentence {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    sentence            String
+    SentenceAggregation SentenceAggregation[]
+}
+
+model FrenchSentence {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    sentence            String
+    SentenceAggregation SentenceAggregation[]
+}
+
+model NorwegianSentence {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    sentence            String
+    SentenceAggregation SentenceAggregation[]
+}

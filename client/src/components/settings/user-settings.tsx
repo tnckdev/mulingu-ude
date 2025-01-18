@@ -24,7 +24,6 @@ const languageItems: LanguageItem[] = [
   { id: "fr", label: "French" },
   { id: "es", label: "Spanish" },
   { id: "no", label: "Norwegian" },
-  { id: "nl", label: "Dutch" },
 ];
 
 const defaultValues = async (): Promise<z.infer<typeof SettingsFormSchema>> => {

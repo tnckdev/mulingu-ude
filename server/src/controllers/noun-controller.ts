@@ -1,22 +1,23 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { LanguageISOZod, NounZod } from "../types";
+import { LanguageISOZ, NounAggregationZ } from "../types";
 import {
-  createNounGroup,
+  createNounAggregation,
   findNoun,
-  findNounGroupWithNouns,
-  findRandomNounGroups,
-} from "../lib/noun-connector";
+  findNounAggregation,
+  findRandomNounAggregations,
+} from "../lib/connectors/noun-connector";
 
 const getNoun = async (req: Request, res: Response) => {
   const SearchParams = z.object({
     id: z.string(),
+    language: LanguageISOZ,
   });
 
   try {
-    const { id } = SearchParams.parse(req.query);
+    const { id, language } = SearchParams.parse(req.query);
 
-    const noun = await findNoun(id);
+    const noun = await findNoun(id, language);
 
     return res.status(200).json(noun);
   } catch (error) {
@@ -25,63 +26,63 @@ const getNoun = async (req: Request, res: Response) => {
   }
 };
 
-const postNounGroup = async (req: Request, res: Response) => {
-  const Body = z.object({
-    nouns: z.array(NounZod).min(1),
-    categoryId: z.string().optional(),
-  });
-
+const postNounAggregation = async (req: Request, res: Response) => {
   try {
-    const { nouns, categoryId } = Body.parse(req.body);
+    const nounAggregation = NounAggregationZ.parse(req.body);
 
-    const createdNounGroup = await createNounGroup(nouns, categoryId);
+    const createdNounAggregation = await createNounAggregation(nounAggregation);
 
-    return res.status(201).json(createdNounGroup);
+    return res.status(201).json(createdNounAggregation);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-const getNounGroup = async (req: Request, res: Response) => {
+const getNounAggregation = async (req: Request, res: Response) => {
   const SearchParams = z.object({
     id: z.string(),
-    includingNouns: z.coerce.boolean().default(false),
+    languages: z.array(LanguageISOZ).default([]),
   });
 
   try {
-    const { id, includingNouns } = SearchParams.parse(req.query);
+    const { id, languages } = SearchParams.parse(req.query);
 
-    const nounGroup = await findNounGroupWithNouns(id, includingNouns);
+    const nounAggregation = await findNounAggregation(id, languages);
 
-    return res.status(200).json(nounGroup);
+    return res.status(200).json(nounAggregation);
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-const getRandomNounGroups = async (req: Request, res: Response) => {
+const getRandomNounAggregations = async (req: Request, res: Response) => {
   const SearchParams = z.object({
-    amount: z.number().min(1).default(10),
-    includingNouns: z.coerce.boolean().default(false),
-    languages: z.array(LanguageISOZod).default(["us", "de"]),
+    amount: z.coerce.number().min(1).default(10),
+    languages: z.array(LanguageISOZ).default(["de", "us", "es", "fr", "no"]),
+    withNouns: z.coerce.boolean().default(false),
   });
 
   try {
-    const { amount, includingNouns, languages } = SearchParams.parse(req.query);
+    const { amount, withNouns, languages } = SearchParams.parse(req.query);
 
-    const randomNounGroups = await findRandomNounGroups(
+    const randomNounAggregations = await findRandomNounAggregations(
       amount,
       languages,
-      includingNouns
+      withNouns
     );
 
-    return res.status(200).json(randomNounGroups);
+    return res.status(200).json(randomNounAggregations);
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-export { postNounGroup, getNoun, getNounGroup, getRandomNounGroups };
+export {
+  getNoun,
+  postNounAggregation,
+  getNounAggregation,
+  getRandomNounAggregations,
+};

@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import { z } from "zod";
-import { LanguageISOZod, RatingLanguageZod } from "../types";
+import { LanguageISOZ, RatingLanguageZ } from "../types";
 import {
   findRatings,
   findUserRating,
   findUserRatings,
-} from "../lib/rating-connector";
+} from "../lib/connectors/rating-connector";
 
 const getRatings = async (req: Request, res: Response) => {
   const SearchParams = z.object({
-    language: RatingLanguageZod.default("total"),
+    language: RatingLanguageZ.default("total"),
     start: z.coerce.number().default(0),
     amount: z.coerce.number().default(10),
   });
@@ -30,7 +30,7 @@ const getRatings = async (req: Request, res: Response) => {
 const getUserRating = async (req: Request, res: Response) => {
   const SearchParams = z.object({
     userId: z.string(),
-    language: RatingLanguageZod.default("total"),
+    language: RatingLanguageZ.default("total"),
   });
 
   try {

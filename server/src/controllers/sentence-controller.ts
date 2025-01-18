@@ -1,41 +1,23 @@
 import { Request, Response } from "express";
-
-import { z } from "zod";
-
-import { LanguageISOZod, SentenceZod } from "../types";
+import { LanguageISOZ, SentenceAggregationZ } from "../types";
 import {
-  createSentenceGroup,
-  findRandomSentenceGroups,
+  createSentenceAggregation,
+  findRandomSentenceAggregations,
   findSentence,
-  findSentenceGroup,
-} from "../lib/sentence-connector";
-
-const postSentenceGroup = async (req: Request, res: Response) => {
-  try {
-    const Body = z.object({
-      categoryId: z.string().optional(),
-      sentences: z.array(SentenceZod).min(1),
-    });
-
-    const { sentences, categoryId } = Body.parse(req.body);
-
-    const createdSentenceGroup = createSentenceGroup(sentences, categoryId);
-
-    return res.status(201).json(createdSentenceGroup);
-  } catch (error) {
-    return res.status(400).json({ error: "Something went wrong" });
-  }
-};
+  findSentenceAggregation,
+} from "../lib/connectors/sentence-connector";
+import { z } from "zod";
 
 const getSentence = async (req: Request, res: Response) => {
   const SearchParams = z.object({
     id: z.string(),
+    language: LanguageISOZ,
   });
 
   try {
-    const { id } = SearchParams.parse(req.query);
+    const { id, language } = SearchParams.parse(req.query);
 
-    const sentence = await findSentence(id);
+    const sentence = await findSentence(id, language);
 
     return res.status(200).json(sentence);
   } catch (error) {
@@ -44,53 +26,65 @@ const getSentence = async (req: Request, res: Response) => {
   }
 };
 
-const getSentenceGroup = async (req: Request, res: Response) => {
-  const SearchParams = z.object({
-    id: z.string(),
-    includingSentences: z.coerce.boolean().default(false),
-  });
-
+const postSentenceAggregation = async (req: Request, res: Response) => {
   try {
-    const { id, includingSentences } = SearchParams.parse(req.query);
+    const sentenceAggregation = SentenceAggregationZ.parse(req.body);
 
-    const sentenceGroup = await findSentenceGroup(id, includingSentences);
+    const createdSentenceAggregation = await createSentenceAggregation(
+      sentenceAggregation
+    );
 
-    return res.status(200).json(sentenceGroup);
+    return res.status(201).json(createdSentenceAggregation);
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-const getRandomSentenceGroups = async (req: Request, res: Response) => {
+const getSentenceAggregation = async (req: Request, res: Response) => {
   const SearchParams = z.object({
-    amount: z.number().min(1).default(10),
-    languages: z.array(LanguageISOZod).default(["us", "de"]),
-    includingSentences: z.coerce.boolean().default(false),
+    id: z.string(),
+    languages: z.array(LanguageISOZ).default(["de", "us", "es", "fr", "no"]),
   });
 
   try {
-    const { amount, languages, includingSentences } = SearchParams.parse(
-      req.query
-    );
+    const { id, languages } = SearchParams.parse(req.query);
 
-    const randomSentenceGroups = await findRandomSentenceGroups(
-      amount,
-      languages,
-      includingSentences
-    );
+    const sentenceAggregation = await findSentenceAggregation(id, languages);
 
-    return res.status(200).json(randomSentenceGroups);
+    return res.status(200).json(sentenceAggregation);
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+const getRandomSentenceAggregations = async (req: Request, res: Response) => {
+  const SearchParams = z.object({
+    amount: z.coerce.number().min(1).default(10),
+    languages: z.array(LanguageISOZ).default(["de", "us", "es", "fr", "no"]),
+    withSentences: z.coerce.boolean().default(false),
+  });
+
+  try {
+    const { amount, withSentences, languages } = SearchParams.parse(req.query);
+
+    const randomSentenceAggregations = await findRandomSentenceAggregations(
+      amount,
+      languages,
+      withSentences
+    );
+
+    return res.status(200).json(randomSentenceAggregations);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
 export {
-  createSentenceGroup,
   getSentence,
-  getSentenceGroup,
-  postSentenceGroup,
-  getRandomSentenceGroups,
+  postSentenceAggregation,
+  getSentenceAggregation,
+  getRandomSentenceAggregations,
 };

@@ -1,90 +1,94 @@
 import { Request, Response } from "express";
 import { z } from "zod";
+import { LanguageISOZ, VerbAggregationZ } from "../types";
 import {
-  createVerbGroup,
-  findRandomVerbGroups,
+  createVerbAggregation,
+  findRandomVerbAggregations,
   findVerb,
-  findVerbGroup,
-} from "../lib/verb-connector";
-import { LanguageISOZod, VerbZod } from "../types";
+  findVerbAggregation,
+} from "../lib/connectors/verb-connector";
 
 const getVerb = async (req: Request, res: Response) => {
   const SearchParams = z.object({
     id: z.string(),
-    forms: z.boolean().default(false),
+    language: LanguageISOZ,
+    withForms: z.coerce.boolean().default(false),
   });
 
   try {
-    const { id, forms } = SearchParams.parse(req.query);
+    const { id, language, withForms } = SearchParams.parse(req.query);
 
-    const verb = await findVerb(id, forms);
+    const verb = await findVerb(id, language, withForms);
 
-    res.status(200).json(verb);
+    return res.status(200).json(verb);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-const getVerbGroup = async (req: Request, res: Response) => {
+const postVerbAggregation = async (req: Request, res: Response) => {
+  try {
+    const verbAggregation = VerbAggregationZ.parse(req.body);
+
+    const createdVerbAggregation = await createVerbAggregation(verbAggregation);
+
+    return res.status(201).json(createdVerbAggregation);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+const getVerbAggregation = async (req: Request, res: Response) => {
   const SearchParams = z.object({
     id: z.string(),
-    verbs: z.boolean().default(false),
-    forms: z.boolean().default(false),
+    languages: z.array(LanguageISOZ).default(["de", "us", "es", "fr", "no"]),
+    withForms: z.coerce.boolean().default(false),
   });
 
   try {
-    const { id, verbs, forms } = SearchParams.parse(req.query);
-    const verbGroup = await findVerbGroup(id, verbs, forms);
-    return res.status(200).json(verbGroup);
+    const { id, languages, withForms } = SearchParams.parse(req.query);
+
+    const verbAggregation = await findVerbAggregation(id, languages, withForms);
+
+    return res.status(200).json(verbAggregation);
   } catch (error) {
     console.error(error);
-    return res.status(400).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-const postVerbGroup = async (req: Request, res: Response) => {
-  try {
-    const Body = z.object({
-      verbs: z.array(VerbZod).min(1),
-      categoryId: z.string().optional(),
-    });
-
-    const { verbs, categoryId } = Body.parse(req.body);
-
-    const createdVerbGroup = await createVerbGroup(verbs, categoryId);
-
-    res.status(201).json(createdVerbGroup);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-};
-
-const getRandomVerbGroups = async (req: Request, res: Response) => {
+const getRandomVerbAggregations = async (req: Request, res: Response) => {
   const SearchParams = z.object({
-    amount: z.number().default(10),
-    languages: z.array(LanguageISOZod).default(["us", "de"]),
-    includingForms: z
-      .enum(["true", "false"])
-      .transform((value) => value === "true")
-      .default("false"),
+    count: z.coerce.number().default(1),
+    languages: z.array(LanguageISOZ).default(["de", "us", "es", "fr", "no"]),
+    withVerbs: z.coerce.boolean().default(true),
+    withForms: z.coerce.boolean().default(true),
   });
 
   try {
-    const { amount, includingForms, languages } = SearchParams.parse(req.query);
-
-    const randomVerbGroups = await findRandomVerbGroups(
-      amount,
-      languages,
-      includingForms
+    const { count, languages, withVerbs, withForms } = SearchParams.parse(
+      req.query
     );
 
-    res.status(200).json(randomVerbGroups);
+    const verbAggregations = await findRandomVerbAggregations(
+      count,
+      languages,
+      withVerbs,
+      withForms
+    );
+
+    return res.status(200).json(verbAggregations);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-export { getVerb, getVerbGroup, postVerbGroup, getRandomVerbGroups };
+export {
+  getVerb,
+  postVerbAggregation,
+  getVerbAggregation,
+  getRandomVerbAggregations,
+};

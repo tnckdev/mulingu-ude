@@ -5,10 +5,9 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchRandomTasks } from "@/lib/learn";
 import { updateShowingSolution, updateTasks } from "@/lib/redux/slices/learn";
 import { selectUserSettings } from "@/lib/redux/slices/user";
-import { transformTasks } from "@/lib/transformers/learn-task-transformer";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import ProtectedRoute from "./protected-route";
+import ProtectedRoute from "@/routes/protected-route";
 
 export default function Learn() {
   const [loading, setLoading] = useState(true);
@@ -33,8 +32,8 @@ export default function Learn() {
           3,
           userSettings.languages
         );
-        const transformedTasks = transformTasks(fetchedTasks);
-        dispatch(updateTasks(transformedTasks));
+
+        dispatch(updateTasks(fetchedTasks.tasks));
         setLoading(false);
       } catch (error) {
         console.error(error);

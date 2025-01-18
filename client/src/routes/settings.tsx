@@ -1,5 +1,5 @@
 import UserSettingsForm from "@/components/settings/user-settings";
-import ProtectedRoute from "./protected-route";
+import ProtectedRoute from "@/routes/protected-route";
 
 const Settings = () => {
   return (

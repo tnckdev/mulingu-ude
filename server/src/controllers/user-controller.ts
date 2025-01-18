@@ -4,9 +4,9 @@ import {
   findUser,
   findUserSettings,
   updateUserSettings,
-} from "../lib/user-connector";
+} from "../lib/connectors/user-connector";
 import { z } from "zod";
-import { UserSettingsZod } from "../types";
+import { UserSettingsZ } from "../types";
 
 const getUser = async (req: Request, res: Response) => {
   const SearchParams = z.object({
@@ -39,7 +39,7 @@ const getUserSettings = async (req: Request, res: Response) => {
 const postUserSettings = async (req: Request, res: Response) => {
   const Body = z.object({
     email: z.string(),
-    userSettings: UserSettingsZod,
+    userSettings: UserSettingsZ,
   });
 
   const { email, userSettings } = Body.parse(req.body);
