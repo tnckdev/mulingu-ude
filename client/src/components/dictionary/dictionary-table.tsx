@@ -6,7 +6,7 @@ import { LanguageISO } from "@/utils/types";
 import { useState } from "react";
 
 const DictionaryTable = () => {
-  const isos: LanguageISO[] = ["us", "de", "es", "fr", "no", "nl"];
+  const isos: LanguageISO[] = ["us", "de", "es", "fr", "no"];
   type DictionaryType = "noun" | "verb";
   const dictionaries: DictionaryType[] = ["noun", "verb"];
 
@@ -15,7 +15,7 @@ const DictionaryTable = () => {
     useState<DictionaryType>("noun");
 
   return (
-    <div className="w-full h-screen pt-14 flex flex-col items-center justify-start gap-5">
+    <div className="w-full min h-screen pt-14 flex flex-col items-center justify-start gap-5">
       <p className="text-7xl font-bold">Dictionary</p>
       <div className="w-9/12 flex flex-col items-center gap-5">
         <p>Kind</p>

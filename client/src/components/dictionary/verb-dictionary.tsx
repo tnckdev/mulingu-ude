@@ -1,6 +1,6 @@
 import VerbTable from "@/components/dictionary/verb-table";
 import { fetchLanguageVerbs } from "@/lib/dictionary";
-import { LanguageISO, Verb } from "@/utils/types";
+import { LanguageISO, StandardVerb } from "@/utils/types";
 import { useEffect, useRef, useState } from "react";
 
 const VerbDictionary = ({
@@ -10,8 +10,8 @@ const VerbDictionary = ({
   iso: LanguageISO;
   start: number;
 }) => {
-  const [verbs, setVerbs] = useState<Verb[]>([]);
-  const verbsCache = useRef<{ [key: string]: Verb[] }>({});
+  const [verbs, setVerbs] = useState<StandardVerb[]>([]);
+  const verbsCache = useRef<{ [key: string]: StandardVerb[] }>({});
 
   useEffect(() => {
     const fetchVerbs = async () => {

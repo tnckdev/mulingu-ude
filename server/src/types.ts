@@ -1,16 +1,5 @@
 import { z } from "zod";
 
-export type Word = {
-  value: string;
-  iso: string;
-};
-
-export type Category = {
-  title: string;
-  description?: string;
-  wordCount?: number;
-};
-
 type User = {
   name: string;
   email: string;
@@ -22,124 +11,338 @@ type Session = {
   expires: string;
 };
 
-const Theme = z.enum(["light", "dark", "system"]);
-type Theme = z.infer<typeof Theme>;
+const ThemeZ = z.enum(["light", "dark", "system"]);
+type Theme = z.infer<typeof ThemeZ>;
 
-const LanguageISOZod = z.enum(["us", "de", "fr", "es", "no", "nl"]);
-type LanguageISO = z.infer<typeof LanguageISOZod>;
+const LanguageISOZ = z.enum(["us", "de", "fr", "es", "no"]);
+type LanguageISO = z.infer<typeof LanguageISOZ>;
 
 type LanguageItem = { id: LanguageISO; label: string };
 
 const SettingsFormSchema = z.object({
-  theme: Theme,
-  native: LanguageISOZod,
+  theme: ThemeZ,
+  native: LanguageISOZ,
   languages: z
-    .array(LanguageISOZod)
+    .array(LanguageISOZ)
     .min(2, { message: "You must select at least 2 languages." }),
 });
 
-const UserSettingsZod = z.object({
-  theme: Theme,
-  native: LanguageISOZod,
-  languages: z.array(LanguageISOZod),
+const UserSettingsZ = z.object({
+  theme: ThemeZ,
+  native: LanguageISOZ,
+  languages: z.array(LanguageISOZ),
 });
-type UserSettings = z.infer<typeof UserSettingsZod>;
+type UserSettings = z.infer<typeof UserSettingsZ>;
 
-const NounZod = z.object({
-  id: z.string(),
-  language: LanguageISOZod,
-  definiteSingularArticle: z.string(),
-  indefiniteSingularArticle: z.string(),
-  definitePluralArticle: z.string(),
-  singular: z.string(),
-  plural: z.string(),
-  nounGroupId: z.string(),
+const RatingLanguageZ = z.union([LanguageISOZ, z.literal("total")]);
+type RatingLanguage = z.infer<typeof RatingLanguageZ>;
+
+// v2
+
+const SolutionZ = z.string().min(1);
+type Solution = z.infer<typeof SolutionZ>;
+
+const SolutionAggregationZ = z.object({
+  solutions: z.record(LanguageISOZ, SolutionZ),
 });
-type Noun = z.infer<typeof NounZod>;
+type SolutionAggregation = z.infer<typeof SolutionAggregationZ>;
 
-const NounGroup = z.object({
-  id: z.string(),
-  nouns: z.array(NounZod),
-});
-type NounGroup = z.infer<typeof NounGroup>;
+const DifficultyZ = z.enum(["EASY", "MEDIUM", "HARD"]);
+type Difficulty = z.infer<typeof DifficultyZ>;
 
-const NounTaskKind = z.enum([
-  "definiteSingular",
-  "indefiniteSingular",
-  "definitePlural",
-]);
-type NounTaskKind = z.infer<typeof NounTaskKind>;
-
-const SentenceZod = z.object({
-  id: z.string(),
-  language: LanguageISOZod,
-  sentence: z.string(),
-  sentenceGroupId: z.string(),
-});
-type Sentence = z.infer<typeof SentenceZod>;
-
-const SentenceGroup = z.object({
-  id: z.string(),
-  sentences: z.array(SentenceZod),
-});
-type SentenceGroup = z.infer<typeof SentenceGroup>;
-
-const Difficulty = z.enum(["EASY", "MEDIUM", "HARD"]);
-type Difficulty = z.infer<typeof Difficulty>;
-
-const Answer = z.object({
+const AnswerZ = z.object({
   text: z.string(),
   solution: z.string(),
   selectedStrings: z.array(z.string()),
   availableStrings: z.array(z.string()),
-  difficulty: Difficulty,
+  difficulty: DifficultyZ,
 });
-type Answer = z.infer<typeof Answer>;
+type Answer = z.infer<typeof AnswerZ>;
 
-const Reference = z.object({
-  iso: LanguageISOZod,
+const ReferenceZ = z.object({
+  iso: LanguageISOZ,
   text: z.string(),
 });
-type Reference = z.infer<typeof Reference>;
+type Reference = z.infer<typeof ReferenceZ>;
 
-const Task = z.object({
+const TaskZ = z.object({
   kind: z.enum(["word", "sentence"]),
-  reference: Reference,
-  answers: z.record(LanguageISOZod, Answer),
-  currentISO: LanguageISOZod,
+  reference: ReferenceZ,
+  answers: z.record(LanguageISOZ, AnswerZ),
+  currentISO: LanguageISOZ,
 });
-type Task = z.infer<typeof Task>;
+type Task = z.infer<typeof TaskZ>;
 
-const VerbForm = z.object({
-  id: z.string(),
-  numerus: z.enum(["singular", "plural"]),
-  persona: z.enum(["first", "second", "third"]),
-  tempus: z.enum(["present", "past", "future"]),
-  modus: z.enum(["indicative", "subjunctive", "imperative"]),
-  value: z.string(),
-  verbId: z.string(),
+const NumerusZ = z.enum(["singular", "plural"]);
+type Numerus = z.infer<typeof NumerusZ>;
+
+const NumerusPersonZ = z.enum(["first", "second", "third"]);
+type NumerusPerson = z.infer<typeof NumerusPersonZ>;
+
+// v2 Verbs
+const VerbFormTenseZ = z.enum(["present", "preterite", "perfect", "future"]);
+type VerbFormTense = z.infer<typeof VerbFormTenseZ>;
+
+const VerbTaskKindZ = z.union([z.literal("infinitive"), VerbFormTenseZ]);
+type VerbTaskKind = z.infer<typeof VerbTaskKindZ>;
+
+const VerbFormZ = z.object({
+  form: VerbFormTenseZ,
+
+  firstPersonSingular: z.string(),
+  secondPersonSingular: z.string(),
+  thirdPersonSingular: z.string(),
+
+  firstPersonPlural: z.string(),
+  secondPersonPlural: z.string(),
+  thirdPersonPlural: z.string(),
 });
-type VerbForm = z.infer<typeof VerbForm>;
+type VerbForm = z.infer<typeof VerbFormZ>;
 
-const VerbZod = z.object({
-  id: z.string(),
-  language: LanguageISOZod,
+const StandardVerbZ = z.object({
   infinitive: z.string(),
-  forms: z.array(VerbForm),
+  forms: z.array(VerbFormZ),
 });
-type Verb = z.infer<typeof VerbZod>;
+type StandardVerb = z.infer<typeof StandardVerbZ>;
 
-const VerbGroup = z.object({
-  id: z.string(),
-  verbs: z.array(VerbZod),
+const GermanVerbZ = z.object({}).merge(StandardVerbZ);
+type GermanVerb = z.infer<typeof GermanVerbZ>;
+
+const EnglishVerbZ = z.object({}).merge(StandardVerbZ);
+type EnglishVerb = z.infer<typeof EnglishVerbZ>;
+
+const SpanishVerbZ = z.object({}).merge(StandardVerbZ);
+type SpanishVerb = z.infer<typeof SpanishVerbZ>;
+
+const FrenchVerbZ = z.object({}).merge(StandardVerbZ);
+type FrenchVerb = z.infer<typeof FrenchVerbZ>;
+
+const NorwegianVerbZ = z.object({
+  infinitive: z.string(),
+
+  present: z.string(),
+  preterite: z.string(),
+  perfect: z.string(),
+  future: z.string(),
 });
-type VerbGroup = z.infer<typeof VerbGroup>;
+type NorwegianVerb = z.infer<typeof NorwegianVerbZ>;
 
-const RatingLanguageZod = z.union([LanguageISOZod, z.literal("total")]);
-type RatingLanguage = z.infer<typeof RatingLanguageZod>;
+const VerbAggregationZ = z.object({
+  de: GermanVerbZ,
+  us: EnglishVerbZ,
+  es: SpanishVerbZ,
+  fr: FrenchVerbZ,
+  no: NorwegianVerbZ,
+});
+type VerbAggregation = z.infer<typeof VerbAggregationZ>;
+
+const PartialVerbAggregationZ = VerbAggregationZ.partial();
+type PartialVerbAggregation = z.infer<typeof PartialVerbAggregationZ>;
+
+// v2 Nouns
+const NounTaskKindZ = z.enum([
+  "definiteSingular",
+  "indefiniteSingular",
+  "definitePlural",
+]);
+type NounTaskKind = z.infer<typeof NounTaskKindZ>;
+
+const BasicNounZ = z.object({
+  singular: z.string(),
+  plural: z.string(),
+});
+type BasicNoun = z.infer<typeof BasicNounZ>;
+
+const GermanNounZ = z
+  .object({
+    indefiniteSingularArticle: z.string(),
+    definiteSingularArticle: z.string(),
+    definitePluralArticle: z.string(),
+  })
+  .merge(BasicNounZ);
+type GermanNoun = z.infer<typeof GermanNounZ>;
+
+const EnglishNounZ = z
+  .object({
+    indefiniteSingularArticle: z.string(),
+  })
+  .merge(BasicNounZ);
+
+type EnglishNoun = z.infer<typeof EnglishNounZ>;
+
+const SpanishNounZ = z
+  .object({
+    indefiniteSingularArticle: z.string(),
+    definiteSingularArticle: z.string(),
+    indefinitePluralArticle: z.string(),
+    definitePluralArticle: z.string(),
+  })
+  .merge(BasicNounZ);
+type SpanishNoun = z.infer<typeof SpanishNounZ>;
+
+const FrenchNounZ = z
+  .object({
+    indefiniteSingularArticle: z.string(),
+    definiteSingularArticle: z.string(),
+  })
+  .merge(BasicNounZ);
+type FrenchNoun = z.infer<typeof FrenchNounZ>;
+
+const NorwegianNounZ = z
+  .object({
+    indefiniteSingularArticle: z.string(),
+    definiteSingular: z.string(),
+    definitePlural: z.string(),
+  })
+  .merge(BasicNounZ);
+type NorwegianNoun = z.infer<typeof NorwegianNounZ>;
+
+const NounAggregationZ = z.object({
+  //   id: z.string(),
+  de: GermanNounZ,
+  us: EnglishNounZ,
+  es: SpanishNounZ,
+  fr: FrenchNounZ,
+  no: NorwegianNounZ,
+});
+type NounAggregation = z.infer<typeof NounAggregationZ>;
+
+const PartialNounAggregationZ = NounAggregationZ.partial();
+type PartialNounAggregation = z.infer<typeof PartialNounAggregationZ>;
+
+// v2 Sentences
+const StandardSetenceZ = z.object({
+  sentence: z.string(),
+});
+type StandardSentence = z.infer<typeof StandardSetenceZ>;
+
+const GermanSentenceZ = z.object({}).merge(StandardSetenceZ);
+type GermanSentence = z.infer<typeof GermanSentenceZ>;
+
+const EnglishSentenceZ = z.object({}).merge(StandardSetenceZ);
+type EnglishSentence = z.infer<typeof EnglishSentenceZ>;
+
+const SpanishSentenceZ = z.object({}).merge(StandardSetenceZ);
+type SpanishSentence = z.infer<typeof SpanishSentenceZ>;
+
+const FrenchSentenceZ = z.object({}).merge(StandardSetenceZ);
+type FrenchSentence = z.infer<typeof FrenchSentenceZ>;
+
+const NorwegianSentenceZ = z.object({}).merge(StandardSetenceZ);
+type NorwegianSentence = z.infer<typeof NorwegianSentenceZ>;
+
+const SentenceAggregationZ = z.object({
+  de: GermanSentenceZ,
+  us: EnglishSentenceZ,
+  es: SpanishSentenceZ,
+  fr: FrenchSentenceZ,
+  no: NorwegianSentenceZ,
+});
+type SentenceAggregation = z.infer<typeof SentenceAggregationZ>;
+
+const PartialSentenceAggregationZ = SentenceAggregationZ.partial();
+type PartialSentenceAggregation = z.infer<typeof PartialSentenceAggregationZ>;
 
 export type {
+  Solution,
+  SolutionAggregation,
+  Difficulty,
   Answer,
+  Reference,
+  Task,
+  Numerus,
+  NumerusPerson,
+};
+
+export {
+  SolutionZ,
+  SolutionAggregationZ,
+  DifficultyZ,
+  AnswerZ,
+  ReferenceZ,
+  TaskZ,
+  NumerusZ,
+  NumerusPersonZ,
+};
+
+// verb exports
+export type {
+  VerbFormTense,
+  VerbTaskKind,
+  VerbForm,
+  StandardVerb,
+  GermanVerb,
+  EnglishVerb,
+  SpanishVerb,
+  FrenchVerb,
+  NorwegianVerb,
+  VerbAggregation,
+  PartialVerbAggregation,
+};
+
+export {
+  VerbFormTenseZ,
+  VerbTaskKindZ,
+  VerbFormZ,
+  StandardVerbZ,
+  GermanVerbZ,
+  EnglishVerbZ,
+  SpanishVerbZ,
+  FrenchVerbZ,
+  NorwegianVerbZ,
+  VerbAggregationZ,
+  PartialVerbAggregationZ,
+};
+
+// noun exports
+export type {
+  NounTaskKind,
+  BasicNoun,
+  GermanNoun,
+  EnglishNoun,
+  SpanishNoun,
+  FrenchNoun,
+  NorwegianNoun,
+  NounAggregation,
+  PartialNounAggregation,
+};
+
+export {
+  NounTaskKindZ,
+  BasicNounZ,
+  GermanNounZ,
+  EnglishNounZ,
+  SpanishNounZ,
+  FrenchNounZ,
+  NorwegianNounZ,
+  NounAggregationZ,
+  PartialNounAggregationZ,
+};
+
+// sentence exports
+export type {
+  GermanSentence,
+  EnglishSentence,
+  SpanishSentence,
+  FrenchSentence,
+  NorwegianSentence,
+  StandardSentence,
+  SentenceAggregation,
+  PartialSentenceAggregation,
+};
+
+export {
+  GermanSentenceZ,
+  EnglishSentenceZ,
+  SpanishSentenceZ,
+  FrenchSentenceZ,
+  NorwegianSentenceZ,
+  StandardSetenceZ,
+  SentenceAggregationZ,
+  PartialSentenceAggregationZ,
+};
+
+export type {
   Theme,
   User,
   Session,
@@ -147,25 +350,12 @@ export type {
   UserSettings,
   LanguageItem,
   RatingLanguage,
-  Noun,
-  NounGroup,
-  NounTaskKind,
-  Task,
-  Reference,
-  Sentence,
-  SentenceGroup,
-  Verb,
-  VerbForm,
-  VerbGroup,
-  Difficulty,
 };
 
 export {
   SettingsFormSchema,
-  LanguageISOZod,
-  VerbZod,
-  SentenceZod,
-  NounZod,
-  UserSettingsZod,
-  RatingLanguageZod,
+  LanguageISOZ,
+  UserSettingsZ,
+  RatingLanguageZ,
+  ThemeZ,
 };

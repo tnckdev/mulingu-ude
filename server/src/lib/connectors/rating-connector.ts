@@ -1,5 +1,5 @@
-import { prisma } from "../prisma";
-import { RatingLanguage } from "../types";
+import { prisma } from "../../index";
+import { RatingLanguage } from "../../types";
 
 const findRatings = async (
   language: RatingLanguage

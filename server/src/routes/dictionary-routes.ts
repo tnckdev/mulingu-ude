@@ -1,8 +1,5 @@
 import { Router } from "express";
-import {
-  getLanguageNouns,
-  getLanguageVerbs,
-} from "../controllers/dictionary-controller";
+import { getLanguageNouns, getLanguageVerbs } from "../controllers/dictionary-controller";
 
 const dictionaryRouter = Router();
 

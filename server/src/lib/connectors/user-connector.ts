@@ -1,5 +1,5 @@
-import { UserSettings } from "../types";
-import { prisma } from "../index";
+import { prisma } from "../../index";
+import { UserSettings } from "../../types";
 
 const findUser = async (email: string) => {
   return await prisma.user.findUnique({

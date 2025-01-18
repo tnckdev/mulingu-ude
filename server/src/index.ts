@@ -79,7 +79,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-app.use("/api", authenticatedUser, mulinguApi);
+app.use("/api", mulinguApi);
 
 if (process.env.NODE_ENV !== "production") {
   app.listen(port, () => {

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { Input } from "@/components/ui/input";
-import { Noun } from "@/utils/types";
+import { BasicNoun } from "@/utils/types";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -16,20 +16,8 @@ import {
 // import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const NounTable = ({ data }: { data: Noun[] }) => {
-  const columns: ColumnDef<Noun>[] = [
-    {
-      accessorKey: "definiteSingularArticle",
-      header: "Article",
-      cell: ({ row }) => {
-        return (
-          <div className="text-left font-bold">
-            {row.getValue("definiteSingularArticle")}
-          </div>
-        );
-      },
-      size: 20,
-    },
+const BasicNounTable = ({ data }: { data: BasicNoun[] }) => {
+  const columns: ColumnDef<BasicNoun>[] = [
     {
       accessorKey: "singular",
       header: "Singular",
@@ -51,15 +39,15 @@ const NounTable = ({ data }: { data: Noun[] }) => {
       size: 100,
     },
     // {
-    //   accessorKey: "nounGroupId",
+    //   accessorKey: "BasicNounGroupId",
     //   header: "Group",
     //   cell: ({ row }) => {
-    //     const nounGroupId = row.getValue("nounGroupId") as string;
+    //     const BasicNounGroupId = row.getValue("BasicNounGroupId") as string;
 
     //     return (
     //       <div className="text-left font-bold">
     //         <Button
-    //           onClick={() => navigate(`/dictionary/${nounGroupId}`)}
+    //           onClick={() => navigate(`/dictionary/${BasicNounGroupId}`)}
     //           className="aspect-square"
     //         >
     //           <ArrowRight />
@@ -141,4 +129,4 @@ const NounTable = ({ data }: { data: Noun[] }) => {
   );
 };
 
-export default NounTable;
+export default BasicNounTable;

@@ -8,7 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { DataTable } from "../ui/data-table";
+import { DataTable } from "@/components/ui/data-table";
 
 const LeaderboardTable = ({ data }: { data: RatingEntry[] }) => {
   const columns: ColumnDef<RatingEntry>[] = [

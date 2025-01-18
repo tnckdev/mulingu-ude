@@ -1,9 +1,10 @@
 import { Router } from "express";
+
 import {
   getNoun,
-  getNounGroup,
-  getRandomNounGroups,
-  postNounGroup,
+  getNounAggregation,
+  getRandomNounAggregations,
+  postNounAggregation,
 } from "../controllers/noun-controller";
 
 const nounRouter = Router();
@@ -12,16 +13,16 @@ nounRouter.get("/", async (req, res) => {
   await getNoun(req, res);
 });
 
-nounRouter.post("/group", async (req, res) => {
-  await postNounGroup(req, res);
+nounRouter.post("/aggregation", async (req, res) => {
+  await postNounAggregation(req, res);
 });
 
-nounRouter.get("/group", async (req, res) => {
-  await getNounGroup(req, res);
+nounRouter.get("/aggregation", async (req, res) => {
+  await getNounAggregation(req, res);
 });
 
-nounRouter.get("/group/random", async (req, res) => {
-  await getRandomNounGroups(req, res);
+nounRouter.get("/aggregation/random", async (req, res) => {
+  await getRandomNounAggregations(req, res);
 });
 
 export { nounRouter };

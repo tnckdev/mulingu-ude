@@ -11,6 +11,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
 }
 
 model User {
@@ -114,102 +115,4 @@ model Ratings {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, language])
-}
-
-/**
- * A Category groups NounGroups, VerbGroups and SentenceGroups.
- */
-model Category {
-  id             String          @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  nounGroups     NounGroup[]
-  verbGroups     VerbGroup[]
-  sentenceGroups SentenceGroup[]
-}
-
-/**
- * A NounGroup groups nouns with the same meaning in different languages.
- */
-model NounGroup {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  nouns      Noun[]
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?   @db.ObjectId
-}
-
-/**
- * A Noun is a word that refers to a person, place, thing, event, substance or quality.
- */
-model Noun {
-  id                        String @id @default(auto()) @map("_id") @db.ObjectId
-  language                  String
-  definiteSingularArticle   String
-  indefiniteSingularArticle String
-  definitePluralArticle     String
-  singular                  String
-  plural                    String
-
-  nounGroup   NounGroup @relation(fields: [nounGroupId], references: [id])
-  nounGroupId String    @db.ObjectId
-
-  @@unique([language, definiteSingularArticle, definitePluralArticle, indefiniteSingularArticle, singular, plural])
-}
-
-/**
- * A SentenceGroup groups sentences with the same meaning in different languages.
- */
-model SentenceGroup {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  sentences  Sentence[]
-  Category   Category?  @relation(fields: [categoryId], references: [id])
-  categoryId String?    @db.ObjectId
-}
-
-/**
- * A Sentence is a group of words that expresses a statement, question, command or exclamation.
- */
-model Sentence {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  language        String
-  sentence        String
-  sentenceGroup   SentenceGroup @relation(fields: [sentenceGroupId], references: [id])
-  sentenceGroupId String        @db.ObjectId
-
-  @@unique([language, sentence])
-}
-
-/**
- * A VerbGroup groups verbs with the same meaning in different languages.
- */
-model VerbGroup {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  verbs      Verb[]
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?   @db.ObjectId
-}
-
-/**
- * A Verb is a word that describes an action, state or occurrence.
- */
-model Verb {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  language    String
-  infinitive  String
-  forms       VerbForm[]
-  verbGroup   VerbGroup  @relation(fields: [verbGroupId], references: [id])
-  verbGroupId String     @db.ObjectId
-}
-
-/**
- * A VerbForm is a conjugated form of a verb.
- */
-model VerbForm {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  numerus String
-  persona String
-  modus   String
-  tempus  String
-  value   String
-  verb    Verb   @relation(fields: [verbId], references: [id])
-  verbId  String @db.ObjectId
 }

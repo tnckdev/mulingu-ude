@@ -1,11 +1,23 @@
-import { NextFunction, Request, Response } from "express";
-import { prisma } from "../prisma";
+import { Request, Response } from "express";
 import { z } from "zod";
+import { findRandomNounAggregations } from "../lib/connectors/noun-connector";
+import {
+  LanguageISO,
+  LanguageISOZ,
+  PartialNounAggregationZ,
+  PartialSentenceAggregationZ,
+  PartialVerbAggregationZ,
+  Task,
+} from "../types";
+import { findRandomVerbAggregations } from "../lib/connectors/verb-connector";
+import { findRandomSentenceAggregations } from "../lib/connectors/sentence-connector";
+import { getVerbAggregationTask } from "../lib/transformers/verb-transformer";
+import { getNounAggregationTask } from "../lib/transformers/noun-transformer";
+import { getSentenceAggregationTask } from "../lib/transformers/sentence-transformer";
 import { getUserSession } from "../lib";
-import { LanguageISO, LanguageISOZod } from "../types";
-import { findRandomNounGroups } from "../lib/noun-connector";
-import { findRandomVerbGroups } from "../lib/verb-connector";
-import { findRandomSentenceGroups } from "../lib/sentence-connector";
+import { prisma } from "../index";
+import { updateRating } from "../lib/connectors/learn-connector";
+import { transformTask } from "../lib/transformers/task-transformer";
 
 const getRandomTasks = async (req: Request, res: Response) => {
   const SearchParams = z.object({
@@ -17,7 +29,7 @@ const getRandomTasks = async (req: Request, res: Response) => {
         if (typeof val === "string") {
           return val.split(",").map((lang) => lang.trim()) as LanguageISO[];
         }
-      }, z.array(LanguageISOZod))
+      }, z.array(LanguageISOZ))
       .default(["us", "de"]),
   });
 
@@ -26,18 +38,54 @@ const getRandomTasks = async (req: Request, res: Response) => {
       req.query
     );
 
-    const randomNounGroups = await findRandomNounGroups(nouns, languages, true);
-    const randomVerbGroups = await findRandomVerbGroups(verbs, languages, true);
-    const randomSentenceGroups = await findRandomSentenceGroups(
+    const randomNounAggregations = await findRandomNounAggregations(
+      nouns,
+      languages,
+      true
+    );
+
+    const randomVerbAggregations = await findRandomVerbAggregations(
+      verbs,
+      languages,
+      true,
+      true
+    );
+
+    const randomSentenceAggregations = await findRandomSentenceAggregations(
       sentences,
       languages,
       true
     );
 
+    const verbAggregationTasks: Task[] = randomVerbAggregations.map(
+      (verbAggregation) => {
+        const parsed = PartialVerbAggregationZ.parse(verbAggregation);
+        return getVerbAggregationTask(parsed);
+      }
+    );
+
+    const nounAggregationTasks = randomNounAggregations.map(
+      (nounAggregation) => {
+        const parsed = PartialNounAggregationZ.parse(nounAggregation);
+        return getNounAggregationTask(parsed);
+      }
+    );
+
+    const sentenceAggregationTasks = randomSentenceAggregations.map(
+      (sentenceAggregation) => {
+        const parsed = PartialSentenceAggregationZ.parse(sentenceAggregation);
+        return getSentenceAggregationTask(parsed);
+      }
+    );
+
+    const tasks = [
+      ...verbAggregationTasks,
+      ...nounAggregationTasks,
+      ...sentenceAggregationTasks,
+    ];
+
     return res.status(200).json({
-      nounGroups: randomNounGroups,
-      verbGroups: randomVerbGroups,
-      sentenceGroups: randomSentenceGroups,
+      tasks,
     });
   } catch (error) {
     console.error(error);
@@ -94,38 +142,6 @@ const gradeAnswers = async (req: Request, res: Response) => {
     console.error(error);
     return res.status(400).json({ error: "Something went wrong" });
   }
-};
-
-const updateRating = async (
-  userId: string,
-  language: string,
-  rating: number
-) => {
-  const existingRating = await prisma.ratings.findUnique({
-    where: {
-      userId_language: {
-        userId: userId,
-        language: language,
-      },
-    },
-  });
-
-  const currentRating = existingRating ? existingRating.rating : 0;
-
-  const ratings = await prisma.ratings.upsert({
-    where: {
-      userId_language: {
-        userId: userId,
-        language: language,
-      },
-    },
-    update: { rating: currentRating + rating },
-    create: {
-      userId: userId,
-      language: language,
-      rating: rating,
-    },
-  });
 };
 
 export { getRandomTasks, gradeAnswers };

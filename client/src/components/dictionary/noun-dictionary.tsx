@@ -1,6 +1,6 @@
 import NounTable from "@/components/dictionary/noun-table";
 import { fetchLanguageNouns } from "@/lib/dictionary";
-import { LanguageISO, Noun } from "@/utils/types";
+import { BasicNoun, LanguageISO } from "@/utils/types";
 import { useEffect, useRef, useState } from "react";
 
 const NounDictionary = ({
@@ -10,8 +10,8 @@ const NounDictionary = ({
   iso: LanguageISO;
   start: number;
 }) => {
-  const [nouns, setNouns] = useState<Noun[]>([]);
-  const nounsCache = useRef<{ [key: string]: Noun[] }>({});
+  const [nouns, setNouns] = useState<BasicNoun[]>([]);
+  const nounsCache = useRef<{ [key: string]: BasicNoun[] }>({});
 
   useEffect(() => {
     const fetchNouns = async () => {

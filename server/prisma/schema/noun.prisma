@@ -1,0 +1,79 @@
+model NounAggregation {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    de GermanNoun    @relation(fields: [germanNounId], references: [id])
+    us EnglishNoun   @relation(fields: [englishNounId], references: [id])
+    es SpanishNoun   @relation(fields: [spanishNounId], references: [id])
+    fr FrenchNoun    @relation(fields: [frenchNounId], references: [id])
+    no NorwegianNoun @relation(fields: [norwegianNounId], references: [id])
+
+    germanNounId    String @db.ObjectId
+    englishNounId   String @db.ObjectId
+    spanishNounId   String @db.ObjectId
+    frenchNounId    String @db.ObjectId
+    norwegianNounId String @db.ObjectId
+}
+
+model GermanNoun {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    indefiniteSingularArticle String
+    definiteSingularArticle   String
+    definitePluralArticle     String
+
+    singular String
+    plural   String
+
+    NounAggregation NounAggregation[]
+}
+
+model EnglishNoun {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    indefiniteSingularArticle String
+
+    singular String
+    plural   String
+
+    NounAggregation NounAggregation[]
+}
+
+model SpanishNoun {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    indefiniteSingularArticle String
+    definiteSingularArticle   String
+    indefinitePluralArticle   String
+    definitePluralArticle     String
+
+    singular String
+    plural   String
+
+    NounAggregation NounAggregation[]
+}
+
+model FrenchNoun {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    indefiniteSingularArticle String
+    definiteSingularArticle   String
+
+    singular String
+    plural   String
+
+    NounAggregation NounAggregation[]
+}
+
+model NorwegianNoun {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    indefiniteSingularArticle String
+
+    singular String
+    plural   String
+
+    definiteSingular String
+    definitePlural   String
+
+    NounAggregation NounAggregation[]
+}

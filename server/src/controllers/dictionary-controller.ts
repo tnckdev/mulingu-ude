@@ -1,15 +1,13 @@
 import { Request, Response } from "express";
-import {
-  findLanguageNouns,
-  findLanguageVerbs,
-} from "../lib/dictionary-connector";
+
 import { z } from "zod";
-import { LanguageISOZod } from "../types";
+import { LanguageISOZ } from "../types";
+import { findLanguageNouns, findLanguageVerbs } from "../lib/connectors/dictionary-connector";
 
 const getLanguageNouns = async (req: Request, res: Response) => {
   try {
     const SearchParams = z.object({
-      language: LanguageISOZod,
+      language: LanguageISOZ,
     });
 
     const { language } = SearchParams.parse(req.query);
@@ -26,7 +24,7 @@ const getLanguageNouns = async (req: Request, res: Response) => {
 const getLanguageVerbs = async (req: Request, res: Response) => {
   try {
     const SearchParams = z.object({
-      language: LanguageISOZod,
+      language: LanguageISOZ,
     });
 
     const { language } = SearchParams.parse(req.query);

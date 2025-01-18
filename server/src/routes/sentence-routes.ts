@@ -1,9 +1,10 @@
 import { Router } from "express";
+
 import {
-  getRandomSentenceGroups,
+  getRandomSentenceAggregations,
   getSentence,
-  getSentenceGroup,
-  postSentenceGroup,
+  getSentenceAggregation,
+  postSentenceAggregation,
 } from "../controllers/sentence-controller";
 
 const sentenceRouter = Router();
@@ -12,16 +13,16 @@ sentenceRouter.get("/", async (req, res) => {
   await getSentence(req, res);
 });
 
-sentenceRouter.post("/group", async (req, res) => {
-  await postSentenceGroup(req, res);
+sentenceRouter.post("/aggregation", async (req, res) => {
+  await postSentenceAggregation(req, res);
 });
 
-sentenceRouter.get("/group", async (req, res) => {
-  await getSentenceGroup(req, res);
+sentenceRouter.get("/aggregation", async (req, res) => {
+  await getSentenceAggregation(req, res);
 });
 
-sentenceRouter.get("/group/random", async (req, res) => {
-  await getRandomSentenceGroups(req, res);
+sentenceRouter.get("/aggregation/random", async (req, res) => {
+  await getRandomSentenceAggregations(req, res);
 });
 
 export { sentenceRouter };

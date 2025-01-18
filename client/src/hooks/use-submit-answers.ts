@@ -14,6 +14,7 @@ const useSubmitAnswers = () => {
   useEffect(() => {
     const answers = getTransformedAnswers();
     setAllTasksCompleted(answers.every((answer) => answer.answer !== ""));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks]);
 
   const getTransformedAnswers = () => {
